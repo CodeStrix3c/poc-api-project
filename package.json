@@ -1,0 +1,19 @@
+{
+  "name": "discussion-forum-mock-api",
+  "version": "1.0.0",
+  "description": "Stack Overflow-like mock API with SQLite — zero config, no Docker needed",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node seed.js",
+    "reset": "node seed.js --reset"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
