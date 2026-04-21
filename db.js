@@ -233,6 +233,20 @@ function createSchema(db) {
       Term   TEXT    NOT NULL UNIQUE,
       Weight INTEGER DEFAULT 1
     );
+
+    -- ============================================================
+    -- QUESTION VIEWS (track user views)
+    -- ============================================================
+    CREATE TABLE IF NOT EXISTS QuestionViews (
+      Id          INTEGER PRIMARY KEY AUTOINCREMENT,
+      QuestionId  INTEGER NOT NULL REFERENCES Questions(Id) ON DELETE CASCADE,
+      UserId      INTEGER NOT NULL REFERENCES Users(Id),
+      ViewedAt    TEXT    DEFAULT (datetime('now')),
+      UNIQUE(QuestionId, UserId)
+    );
+
+    CREATE INDEX IF NOT EXISTS IX_QuestionViews_QuestionId ON QuestionViews(QuestionId);
+    CREATE INDEX IF NOT EXISTS IX_QuestionViews_UserId ON QuestionViews(UserId);
   `);
 }
 

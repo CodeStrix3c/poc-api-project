@@ -69,14 +69,35 @@ app.get("/api/v1/questions", (req, res) => {
 
 app.get("/api/v1/questions/:id", (req, res) => {
   try {
-    const db = getDb(); const id = parseInt(req.params.id);
+    const db = getDb(); 
+    const id = parseInt(req.params.id);
+    const userId = req.query.userId ? parseInt(req.query.userId) : null;
+    
     const q = db.prepare(`SELECT q.*, u.Username, u.DisplayName, u.Avatar, u.Reputation, u.Bio AS UserBio, GROUP_CONCAT(DISTINCT t.Name) AS TagNames FROM Questions q JOIN Users u ON q.UserId=u.Id LEFT JOIN QuestionTags qt ON qt.QuestionId=q.Id LEFT JOIN Tags t ON qt.TagId=t.Id WHERE q.Id=? GROUP BY q.Id`).get(id);
     if (!q) return res.status(404).json({ error: "Not found" });
+    
+    // Track unique user view if userId provided
+    let isNewView = false;
+    if (userId) {
+      const existingView = db.prepare(`SELECT Id FROM QuestionViews WHERE QuestionId=? AND UserId=?`).get(id, userId);
+      if (!existingView) {
+        db.prepare(`INSERT INTO QuestionViews (QuestionId, UserId) VALUES (?, ?)`).run(id, userId);
+        db.prepare(`UPDATE Questions SET Views=Views+1 WHERE Id=?`).run(id);
+        isNewView = true;
+        // Re-fetch views count
+        q.Views = db.prepare(`SELECT Views FROM Questions WHERE Id=?`).get(id).Views;
+      }
+    } else {
+      // No userId - increment view count every time (legacy behavior)
+      db.prepare(`UPDATE Questions SET Views=Views+1 WHERE Id=?`).run(id);
+      q.Views = q.Views + 1;
+    }
+    
     const media = db.prepare(`SELECT * FROM Media WHERE QuestionId=?`).all(id);
     const comments = db.prepare(`SELECT c.*, u.Username, u.DisplayName, u.Avatar FROM Comments c JOIN Users u ON c.UserId=u.Id WHERE c.QuestionId=? ORDER BY c.CreatedAt`).all(id);
     const linked = db.prepare(`SELECT lq.LinkedQuestionId, q2.Title, q2.Votes, q2.AnswersCount FROM LinkedQuestions lq JOIN Questions q2 ON lq.LinkedQuestionId=q2.Id WHERE lq.QuestionId=?`).all(id);
-    db.prepare(`UPDATE Questions SET Views=Views+1 WHERE Id=?`).run(id);
-    return ok(res, { id:q.Id, title:q.Title, body:q.Body, userId:q.UserId, votes:q.Votes, views:q.Views+1, answersCount:q.AnswersCount, acceptedAnswerId:q.AcceptedAnswerId, status:q.Status, isBounty:!!q.IsBounty, bountyAmount:q.BountyAmount, favorites:q.Favorites, isProtected:!!q.IsProtected, createdAt:q.CreatedAt, updatedAt:q.UpdatedAt, lastActivityAt:q.LastActivityAt, tags:q.TagNames?q.TagNames.split(","):[], media, comments, linkedQuestions:linked, user:{username:q.Username,displayName:q.DisplayName,avatar:q.Avatar,reputation:q.Reputation,bio:q.UserBio} });
+    
+    return ok(res, { id:q.Id, title:q.Title, body:q.Body, userId:q.UserId, votes:q.Votes, views:q.Views, answersCount:q.AnswersCount, acceptedAnswerId:q.AcceptedAnswerId, status:q.Status, isBounty:!!q.IsBounty, bountyAmount:q.BountyAmount, favorites:q.Favorites, isProtected:!!q.IsProtected, createdAt:q.CreatedAt, updatedAt:q.UpdatedAt, lastActivityAt:q.LastActivityAt, tags:q.TagNames?q.TagNames.split(","):[], media, comments, linkedQuestions:linked, user:{username:q.Username,displayName:q.DisplayName,avatar:q.Avatar,reputation:q.Reputation,bio:q.UserBio}, viewTrackingInfo: { isNewView, userId: userId ?? "anonymous" } });
   } catch (err) { return res.status(500).json({ error: err.message }); }
 });
 
@@ -145,6 +166,34 @@ app.patch("/api/v1/answers/:id/accept", (req, res) => {
 });
 
 // ─── COMMENTS ────────────────────────────────────────────────────
+app.get("/api/v1/comments/:id", (req, res) => {
+  try {
+    const db = getDb();
+    const id = parseInt(req.params.id);
+    const comment = db.prepare(`SELECT c.*, u.Username, u.DisplayName, u.Avatar, u.Reputation FROM Comments c JOIN Users u ON c.UserId=u.Id WHERE c.Id=?`).get(id);
+    if (!comment) return res.status(404).json({ error: "Comment not found" });
+    return ok(res, { id:comment.Id, userId:comment.UserId, questionId:comment.QuestionId, answerId:comment.AnswerId, body:comment.Body, votes:comment.Votes, createdAt:comment.CreatedAt, updatedAt:comment.UpdatedAt, user:{username:comment.Username,displayName:comment.DisplayName,avatar:comment.Avatar,reputation:comment.Reputation} });
+  } catch (err) { return res.status(500).json({ error: err.message }); }
+});
+
+app.get("/api/v1/questions/:id/comments", (req, res) => {
+  try {
+    const db = getDb();
+    const qId = parseInt(req.params.id);
+    const comments = db.prepare(`SELECT c.*, u.Username, u.DisplayName, u.Avatar, u.Reputation FROM Comments c JOIN Users u ON c.UserId=u.Id WHERE c.QuestionId=? ORDER BY c.CreatedAt DESC`).all(qId);
+    return ok(res, { questionId: qId, count: comments.length, comments: comments.map(c => ({ id:c.Id, userId:c.UserId, questionId:c.QuestionId, body:c.Body, votes:c.Votes, createdAt:c.CreatedAt, updatedAt:c.UpdatedAt, user:{username:c.Username,displayName:c.DisplayName,avatar:c.Avatar,reputation:c.Reputation} })) });
+  } catch (err) { return res.status(500).json({ error: err.message }); }
+});
+
+app.get("/api/v1/answers/:id/comments", (req, res) => {
+  try {
+    const db = getDb();
+    const aId = parseInt(req.params.id);
+    const comments = db.prepare(`SELECT c.*, u.Username, u.DisplayName, u.Avatar, u.Reputation FROM Comments c JOIN Users u ON c.UserId=u.Id WHERE c.AnswerId=? ORDER BY c.CreatedAt DESC`).all(aId);
+    return ok(res, { answerId: aId, count: comments.length, comments: comments.map(c => ({ id:c.Id, userId:c.UserId, answerId:c.AnswerId, body:c.Body, votes:c.Votes, createdAt:c.CreatedAt, updatedAt:c.UpdatedAt, user:{username:c.Username,displayName:c.DisplayName,avatar:c.Avatar,reputation:c.Reputation} })) });
+  } catch (err) { return res.status(500).json({ error: err.message }); }
+});
+
 app.post("/api/v1/comments", (req, res) => {
   try {
     const db = getDb(); const { userId, questionId, answerId, body } = req.body;
@@ -212,6 +261,148 @@ app.get("/api/v1/search", (req, res) => {
     if (!q) return ok(res, db.prepare(`SELECT Term FROM SearchSuggestions ORDER BY Weight DESC`).all().map(s => s.Term));
     const rows = db.prepare(`SELECT q.Id, q.Title, q.Votes, q.AnswersCount, q.Views, q.Status, q.CreatedAt, u.DisplayName, u.Avatar, GROUP_CONCAT(DISTINCT t.Name) AS TN FROM Questions q JOIN Users u ON q.UserId=u.Id LEFT JOIN QuestionTags qt ON qt.QuestionId=q.Id LEFT JOIN Tags t ON qt.TagId=t.Id WHERE q.Title LIKE @s OR q.Body LIKE @s GROUP BY q.Id ORDER BY q.Votes DESC`).all({ s: `%${q}%` });
     return res.json({ ...paginate(rows.map(r => ({ ...r, tags: r.TN?r.TN.split(","):[] })), parseInt(page), parseInt(limit)), timestamp: new Date().toISOString() });
+  } catch (err) { return res.status(500).json({ error: err.message }); }
+});
+
+// ─── COUNTERS (Views & Replies) ──────────────────────────────────
+app.get("/api/v1/questions/:id/views", (req, res) => {
+  try {
+    const db = getDb();
+    const id = parseInt(req.params.id);
+    const userId = req.query.userId ? parseInt(req.query.userId) : null;
+    
+    // Check if question exists
+    const q = db.prepare(`SELECT Views FROM Questions WHERE Id=?`).get(id);
+    if (!q) return res.status(404).json({ error: "Question not found" });
+    
+    // If userId provided, check if user has already viewed and increment if not
+    if (userId) {
+      const existingView = db.prepare(`SELECT Id FROM QuestionViews WHERE QuestionId=? AND UserId=?`).get(id, userId);
+      if (!existingView) {
+        // First time this user is viewing - increment view count
+        db.prepare(`INSERT INTO QuestionViews (QuestionId, UserId) VALUES (?, ?)`).run(id, userId);
+        db.prepare(`UPDATE Questions SET Views=Views+1 WHERE Id=?`).run(id);
+        // Re-fetch updated views count
+        const updated = db.prepare(`SELECT Views FROM Questions WHERE Id=?`).get(id);
+        return ok(res, { questionId: id, views: updated.Views, isNewView: true, userId });
+      } else {
+        // User has already viewed - return current count without incrementing
+        return ok(res, { questionId: id, views: q.Views, isNewView: false, userId });
+      }
+    } else {
+      // No userId provided - just return current view count
+      return ok(res, { questionId: id, views: q.Views, isNewView: null, message: "Provide userId query param to track unique views" });
+    }
+  } catch (err) { return res.status(500).json({ error: err.message }); }
+});
+
+app.get("/api/v1/questions/:id/viewers", (req, res) => {
+  try {
+    const db = getDb();
+    const id = parseInt(req.params.id);
+    
+    // Check if question exists
+    const q = db.prepare(`SELECT Id FROM Questions WHERE Id=?`).get(id);
+    if (!q) return res.status(404).json({ error: "Question not found" });
+    
+    // Get all users who have viewed this question
+    const viewers = db.prepare(`SELECT u.Id, u.Username, u.DisplayName, u.Avatar, u.Reputation, qv.ViewedAt FROM QuestionViews qv JOIN Users u ON qv.UserId=u.Id WHERE qv.QuestionId=? ORDER BY qv.ViewedAt DESC`).all(id);
+    const viewCount = db.prepare(`SELECT Views FROM Questions WHERE Id=?`).get(id).Views;
+    
+    return ok(res, { 
+      questionId: id, 
+      totalViews: viewCount,
+      uniqueViewers: viewers.length,
+      viewers: viewers.map(v => ({ userId: v.Id, username: v.Username, displayName: v.DisplayName, avatar: v.Avatar, reputation: v.Reputation, viewedAt: v.ViewedAt }))
+    });
+  } catch (err) { return res.status(500).json({ error: err.message }); }
+});
+
+/**
+ * @swagger
+ * /api/v1/questions/{id}/replies:
+ *   get:
+ *     summary: Get reply (answer) list with details for a question
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - name: sort
+ *         in: query
+ *         schema:
+ *           type: string
+ *           enum: ['votes', 'created']
+ *       - name: order
+ *         in: query
+ *         schema:
+ *           type: string
+ *           enum: ['DESC', 'ASC']
+ *     responses:
+ *       200:
+ *         description: Reply list with count and details
+ *       404:
+ *         description: Question not found
+ */
+app.get("/api/v1/questions/:id/replies", (req, res) => {
+  try {
+    const db = getDb();
+    const qId = parseInt(req.params.id);
+    const { sort = "votes", order = "DESC" } = req.query;
+    
+    // Check if question exists
+    const q = db.prepare(`SELECT Id FROM Questions WHERE Id=?`).get(qId);
+    if (!q) return res.status(404).json({ error: "Question not found" });
+    
+    // Get answers
+    const sortCol = sort === "created" ? "a.CreatedAt" : "a.Votes";
+    const rows = db.prepare(`SELECT a.*, u.Username, u.DisplayName, u.Avatar, u.Reputation FROM Answers a JOIN Users u ON a.UserId=u.Id WHERE a.QuestionId=? ORDER BY a.IsAccepted DESC, ${sortCol} ${order?.toUpperCase()==="ASC"?"ASC":"DESC"}`).all(qId);
+    
+    // Get comments and media for each answer
+    const aids = rows.map(a => a.Id);
+    let cMap = {}, mMap = {};
+    if (aids.length > 0) {
+      const ph = aids.map(()=>"?").join(",");
+      for (const c of db.prepare(`SELECT c.*, u.Username, u.DisplayName, u.Avatar FROM Comments c JOIN Users u ON c.UserId=u.Id WHERE c.AnswerId IN (${ph}) ORDER BY c.CreatedAt`).all(...aids)) { 
+        if (!cMap[c.AnswerId]) cMap[c.AnswerId]=[]; 
+        cMap[c.AnswerId].push(c); 
+      }
+      for (const m of db.prepare(`SELECT * FROM Media WHERE AnswerId IN (${ph})`).all(...aids)) { 
+        if (!mMap[m.AnswerId]) mMap[m.AnswerId]=[]; 
+        mMap[m.AnswerId].push(m); 
+      }
+    }
+    
+    const replies = rows.map(a => ({ id:a.Id, questionId:a.QuestionId, userId:a.UserId, body:a.Body, votes:a.Votes, isAccepted:!!a.IsAccepted, createdAt:a.CreatedAt, updatedAt:a.UpdatedAt, comments:cMap[a.Id]??[], media:mMap[a.Id]??[], user:{username:a.Username,displayName:a.DisplayName,avatar:a.Avatar,reputation:a.Reputation} }));
+    return ok(res, { questionId: qId, count: replies.length, replies });
+  } catch (err) { return res.status(500).json({ error: err.message }); }
+});
+
+/**
+ * @swagger
+ * /api/v1/questions/{id}/counters:
+ *   get:
+ *     summary: Get views and replies counters for a question
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Views and replies counts
+ *       404:
+ *         description: Question not found
+ */
+app.get("/api/v1/questions/:id/counters", (req, res) => {
+  try {
+    const db = getDb();
+    const id = parseInt(req.params.id);
+    const q = db.prepare(`SELECT Views, AnswersCount FROM Questions WHERE Id=?`).get(id);
+    if (!q) return res.status(404).json({ error: "Question not found" });
+    return ok(res, { questionId: id, views: q.Views, replies: q.AnswersCount, total: q.Views + q.AnswersCount });
   } catch (err) { return res.status(500).json({ error: err.message }); }
 });
 

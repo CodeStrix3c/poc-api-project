@@ -216,6 +216,224 @@ const options = {
           responses: { 201: { description: 'Comment created' } },
         },
       },
+      '/api/v1/comments/{id}': {
+        get: {
+          tags: ['Comments'],
+          summary: 'Get a specific comment by ID',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+          responses: { 
+            200: { 
+              description: 'Comment details',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      data: {
+                        type: 'object',
+                        properties: {
+                          id: { type: 'integer' },
+                          userId: { type: 'integer' },
+                          questionId: { type: 'integer', nullable: true },
+                          answerId: { type: 'integer', nullable: true },
+                          body: { type: 'string' },
+                          votes: { type: 'integer' },
+                          createdAt: { type: 'string' },
+                          updatedAt: { type: 'string' },
+                          user: {
+                            type: 'object',
+                            properties: {
+                              username: { type: 'string' },
+                              displayName: { type: 'string' },
+                              avatar: { type: 'string' },
+                              reputation: { type: 'integer' },
+                            },
+                          },
+                        },
+                      },
+                      timestamp: { type: 'string' },
+                    },
+                  },
+                  example: {
+                    data: {
+                      id: 1,
+                      userId: 3,
+                      questionId: null,
+                      answerId: 1,
+                      body: 'Great explanation!',
+                      votes: 2,
+                      createdAt: '2026-04-22T08:15:00.000Z',
+                      updatedAt: '2026-04-22T08:15:00.000Z',
+                      user: {
+                        username: 'jane_smith',
+                        displayName: 'Jane Smith',
+                        avatar: 'https://example.com/avatar.jpg',
+                        reputation: 850,
+                      },
+                    },
+                    timestamp: '2026-04-22T10:30:00.000Z',
+                  },
+                },
+              },
+            },
+            404: { description: 'Comment not found' },
+          },
+        },
+      },
+      '/api/v1/questions/{id}/comments': {
+        get: {
+          tags: ['Comments'],
+          summary: 'Get all comments for a question',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+          responses: { 
+            200: { 
+              description: 'List of comments for the question',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      data: {
+                        type: 'object',
+                        properties: {
+                          questionId: { type: 'integer' },
+                          count: { type: 'integer' },
+                          comments: {
+                            type: 'array',
+                            items: {
+                              type: 'object',
+                              properties: {
+                                id: { type: 'integer' },
+                                userId: { type: 'integer' },
+                                questionId: { type: 'integer' },
+                                body: { type: 'string' },
+                                votes: { type: 'integer' },
+                                createdAt: { type: 'string' },
+                                updatedAt: { type: 'string' },
+                                user: {
+                                  type: 'object',
+                                  properties: {
+                                    username: { type: 'string' },
+                                    displayName: { type: 'string' },
+                                    avatar: { type: 'string' },
+                                    reputation: { type: 'integer' },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                      timestamp: { type: 'string' },
+                    },
+                  },
+                  example: {
+                    data: {
+                      questionId: 1,
+                      count: 2,
+                      comments: [
+                        {
+                          id: 1,
+                          userId: 3,
+                          questionId: 1,
+                          body: 'Is this still relevant in 2026?',
+                          votes: 1,
+                          createdAt: '2026-04-20T08:15:00.000Z',
+                          updatedAt: '2026-04-20T08:15:00.000Z',
+                          user: {
+                            username: 'jane_smith',
+                            displayName: 'Jane Smith',
+                            avatar: 'https://example.com/avatar.jpg',
+                            reputation: 850,
+                          },
+                        },
+                      ],
+                    },
+                    timestamp: '2026-04-22T10:30:00.000Z',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      '/api/v1/answers/{id}/comments': {
+        get: {
+          tags: ['Comments'],
+          summary: 'Get all comments for an answer',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+          responses: { 
+            200: { 
+              description: 'List of comments for the answer',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      data: {
+                        type: 'object',
+                        properties: {
+                          answerId: { type: 'integer' },
+                          count: { type: 'integer' },
+                          comments: {
+                            type: 'array',
+                            items: {
+                              type: 'object',
+                              properties: {
+                                id: { type: 'integer' },
+                                userId: { type: 'integer' },
+                                answerId: { type: 'integer' },
+                                body: { type: 'string' },
+                                votes: { type: 'integer' },
+                                createdAt: { type: 'string' },
+                                updatedAt: { type: 'string' },
+                                user: {
+                                  type: 'object',
+                                  properties: {
+                                    username: { type: 'string' },
+                                    displayName: { type: 'string' },
+                                    avatar: { type: 'string' },
+                                    reputation: { type: 'integer' },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                      timestamp: { type: 'string' },
+                    },
+                  },
+                  example: {
+                    data: {
+                      answerId: 1,
+                      count: 1,
+                      comments: [
+                        {
+                          id: 2,
+                          userId: 2,
+                          answerId: 1,
+                          body: 'This approach is cleaner than mine!',
+                          votes: 3,
+                          createdAt: '2026-04-21T09:30:00.000Z',
+                          updatedAt: '2026-04-21T09:30:00.000Z',
+                          user: {
+                            username: 'john_doe',
+                            displayName: 'John Doe',
+                            avatar: 'https://example.com/avatar.jpg',
+                            reputation: 1250,
+                          },
+                        },
+                      ],
+                    },
+                    timestamp: '2026-04-22T10:30:00.000Z',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
       '/api/v1/votes': {
         post: {
           tags: ['Votes'],
@@ -383,6 +601,248 @@ const options = {
             { name: 'limit', in: 'query', schema: { type: 'integer', default: 15 } },
           ],
           responses: { 200: { description: 'Search results' } },
+        },
+      },
+      '/api/v1/questions/{id}/views': {
+        get: {
+          tags: ['Counters'],
+          summary: 'Get view count for a question (increments if user is new viewer)',
+          parameters: [
+            { name: 'id', in: 'path', required: true, schema: { type: 'integer' } },
+            { name: 'userId', in: 'query', schema: { type: 'integer' }, description: 'ID of the user viewing the question (optional - used to track unique views per user)' },
+          ],
+          responses: { 
+            200: { 
+              description: 'View count with unique user tracking',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      data: {
+                        type: 'object',
+                        properties: {
+                          questionId: { type: 'integer' },
+                          views: { type: 'integer' },
+                          isNewView: { type: 'boolean', description: 'Whether this is the first view from this user (null if no userId provided)' },
+                          userId: { type: 'integer', description: 'The user ID that was tracked' },
+                          message: { type: 'string', description: 'Message if no userId provided' },
+                        },
+                      },
+                      timestamp: { type: 'string' },
+                    },
+                  },
+                  example: {
+                    data: { 
+                      questionId: 11,
+                      views: 42,
+                      isNewView: true,
+                      userId: 2,
+                    },
+                    timestamp: '2026-04-22T10:30:00.000Z',
+                  },
+                },
+              },
+            },
+            404: { description: 'Question not found' },
+          },
+        },
+      },
+      '/api/v1/questions/{id}/viewers': {
+        get: {
+          tags: ['Counters'],
+          summary: 'Get list of all users who viewed a question',
+          parameters: [
+            { name: 'id', in: 'path', required: true, schema: { type: 'integer' } },
+          ],
+          responses: { 
+            200: { 
+              description: 'List of users who viewed the question',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      data: {
+                        type: 'object',
+                        properties: {
+                          questionId: { type: 'integer' },
+                          totalViews: { type: 'integer' },
+                          uniqueViewers: { type: 'integer' },
+                          viewers: {
+                            type: 'array',
+                            items: {
+                              type: 'object',
+                              properties: {
+                                userId: { type: 'integer' },
+                                username: { type: 'string' },
+                                displayName: { type: 'string' },
+                                avatar: { type: 'string' },
+                                reputation: { type: 'integer' },
+                                viewedAt: { type: 'string' },
+                              },
+                            },
+                          },
+                        },
+                      },
+                      timestamp: { type: 'string' },
+                    },
+                  },
+                  example: {
+                    data: { 
+                      questionId: 11,
+                      totalViews: 42,
+                      uniqueViewers: 5,
+                      viewers: [
+                        {
+                          userId: 2,
+                          username: 'john_doe',
+                          displayName: 'John Doe',
+                          avatar: 'https://example.com/avatar.jpg',
+                          reputation: 1250,
+                          viewedAt: '2026-04-22T10:25:00.000Z',
+                        },
+                        {
+                          userId: 3,
+                          username: 'jane_smith',
+                          displayName: 'Jane Smith',
+                          avatar: 'https://example.com/avatar2.jpg',
+                          reputation: 850,
+                          viewedAt: '2026-04-22T10:20:00.000Z',
+                        },
+                      ],
+                    },
+                    timestamp: '2026-04-22T10:30:00.000Z',
+                  },
+                },
+              },
+            },
+            404: { description: 'Question not found' },
+          },
+        },
+      },
+      '/api/v1/questions/{id}/replies': {
+        get: {
+          tags: ['Counters'],
+          summary: 'Get reply (answer) list with details for a question',
+          parameters: [
+            { name: 'id', in: 'path', required: true, schema: { type: 'integer' } },
+            { name: 'sort', in: 'query', schema: { type: 'string', enum: ['votes', 'created'] } },
+            { name: 'order', in: 'query', schema: { type: 'string', enum: ['DESC', 'ASC'] } },
+          ],
+          responses: { 
+            200: { 
+              description: 'Reply list with count and full details',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      data: {
+                        type: 'object',
+                        properties: {
+                          questionId: { type: 'integer' },
+                          count: { type: 'integer' },
+                          replies: {
+                            type: 'array',
+                            items: {
+                              type: 'object',
+                              properties: {
+                                id: { type: 'integer' },
+                                questionId: { type: 'integer' },
+                                userId: { type: 'integer' },
+                                body: { type: 'string' },
+                                votes: { type: 'integer' },
+                                isAccepted: { type: 'boolean' },
+                                createdAt: { type: 'string' },
+                                updatedAt: { type: 'string' },
+                                comments: { type: 'array' },
+                                media: { type: 'array' },
+                                user: {
+                                  type: 'object',
+                                  properties: {
+                                    username: { type: 'string' },
+                                    displayName: { type: 'string' },
+                                    avatar: { type: 'string' },
+                                    reputation: { type: 'integer' },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                      timestamp: { type: 'string' },
+                    },
+                  },
+                  example: {
+                    data: {
+                      questionId: 1,
+                      count: 2,
+                      replies: [
+                        {
+                          id: 1,
+                          questionId: 1,
+                          userId: 2,
+                          body: 'Great solution using boto3...',
+                          votes: 5,
+                          isAccepted: true,
+                          createdAt: '2026-04-20T08:15:00.000Z',
+                          updatedAt: '2026-04-20T08:15:00.000Z',
+                          comments: [],
+                          media: [],
+                          user: {
+                            username: 'john_doe',
+                            displayName: 'John Doe',
+                            avatar: 'https://example.com/avatar.jpg',
+                            reputation: 1250,
+                          },
+                        },
+                      ],
+                    },
+                    timestamp: '2026-04-22T10:30:00.000Z',
+                  },
+                },
+              },
+            },
+            404: { description: 'Question not found' },
+          },
+        },
+      },
+      '/api/v1/questions/{id}/counters': {
+        get: {
+          tags: ['Counters'],
+          summary: 'Get views and replies counters for a question',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+          responses: { 
+            200: { 
+              description: 'Views and replies counters retrieved',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      data: {
+                        type: 'object',
+                        properties: {
+                          questionId: { type: 'integer' },
+                          views: { type: 'integer' },
+                          replies: { type: 'integer' },
+                          total: { type: 'integer' },
+                        },
+                      },
+                      timestamp: { type: 'string' },
+                    },
+                  },
+                  example: {
+                    data: { questionId: 1, views: 42, replies: 3, total: 45 },
+                    timestamp: '2026-04-22T10:30:00.000Z',
+                  },
+                },
+              },
+            },
+            404: { description: 'Question not found' },
+          },
         },
       },
       '/api/v1/stats': {
