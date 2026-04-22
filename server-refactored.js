@@ -17,7 +17,6 @@ app.use(cors());
 app.use(express.json({ limit: "5mb" }));
 app.use(express.static(__dirname));
 
-// Force an explicit CSP that allows local app-specific DevTools polling
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
@@ -26,15 +25,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Chrome DevTools discovery endpoint (required for certain remote/extension workflows)
 app.get("/.well-known/appspecific/com.chrome.devtools.json", (req, res) =>
   res.json([])
 );
 
-// ─── SWAGGER DOCS ────────────────────────────────────────────────
 app.get("/api-docs/swagger.json", (req, res) => res.json(specs));
 app.get("/api-docs", (req, res) => {
-  res.sendFile(new URL("./swagger-ui-index.html", import.meta.url).pathname);
+  res.sendFile(fileURLToPath(new URL("./swagger-ui-index.html", import.meta.url)));
 });
 app.use(
   "/api-docs/ui",
@@ -47,33 +44,28 @@ app.use(
   })
 );
 
-// Simulated latency
 app.use((req, res, next) => {
   setTimeout(next, Math.random() * 100 + 30);
 });
 
-// ─── API ROUTES (MVC Structure) ──────────────────────────────────
 app.use("/api/v1", routes);
 
-// ─── START ───────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  getDb();
-  console.log(
-    `\n🚀 Forum API → http://localhost:${PORT}\n   DB: SQLite (forum.db) — zero config\n`
-  );
-  console.log(`📚 Swagger UI → http://localhost:${PORT}/api-docs\n`);
-  console.log(
-    `   GET  /api/v1/questions    GET  /api/v1/users`
-  );
-  console.log(
-    `   GET  /api/v1/tags         GET  /api/v1/search?q=...`
-  );
-  console.log(
-    `   GET  /api/v1/stats        GET  /api/v1/health\n`
-  );
+app.listen(PORT, async () => {
+  try {
+    await getDb();
+    console.log(
+      `\nForum API -> http://localhost:${PORT}\n   DB: SQL Server (${process.env.DB_NAME || "discussion_forum"})\n`
+    );
+    console.log(`Swagger UI -> http://localhost:${PORT}/api-docs\n`);
+    console.log(`   GET  /api/v1/questions    GET  /api/v1/users`);
+    console.log(`   GET  /api/v1/tags         GET  /api/v1/search?q=...`);
+    console.log(`   GET  /api/v1/stats        GET  /api/v1/health\n`);
+  } catch (err) {
+    process.exitCode = 1;
+  }
 });
 
-process.on("SIGINT", () => {
-  closeDb();
+process.on("SIGINT", async () => {
+  await closeDb();
   process.exit(0);
 });

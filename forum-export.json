@@ -1,0 +1,2094 @@
+{
+  "Users": [
+    {
+      "Id": 1,
+      "Username": "dev_ninja",
+      "DisplayName": "Arjun Mehta",
+      "Email": "arjun.mehta@example.com",
+      "Avatar": "https://i.pravatar.cc/150?img=11",
+      "Bio": "Full-stack developer | .NET Core | React | Cloud Architecture",
+      "Reputation": 15420,
+      "GoldBadges": 5,
+      "SilverBadges": 22,
+      "BronzeBadges": 48,
+      "Location": "Bangalore, India",
+      "Website": "https://arjunmehta.dev",
+      "IsOnline": 1,
+      "JoinedAt": "2021-03-15 08:30:00",
+      "LastSeen": "2026-03-31 14:22:00"
+    },
+    {
+      "Id": 2,
+      "Username": "code_queen",
+      "DisplayName": "Sara Chen",
+      "Email": "sara.chen@example.com",
+      "Avatar": "https://i.pravatar.cc/150?img=5",
+      "Bio": "Python | ML Engineer | Open Source Contributor",
+      "Reputation": 28750,
+      "GoldBadges": 12,
+      "SilverBadges": 45,
+      "BronzeBadges": 89,
+      "Location": "San Francisco, CA",
+      "Website": "https://sarachen.io",
+      "IsOnline": 1,
+      "JoinedAt": "2020-01-10 10:00:00",
+      "LastSeen": "2026-04-01 09:15:00"
+    },
+    {
+      "Id": 3,
+      "Username": "js_wizard",
+      "DisplayName": "Liam O'Connor",
+      "Email": "liam.oconnor@example.com",
+      "Avatar": "https://i.pravatar.cc/150?img=12",
+      "Bio": "JavaScript enthusiast | Node.js | TypeScript | DevOps",
+      "Reputation": 9870,
+      "GoldBadges": 2,
+      "SilverBadges": 15,
+      "BronzeBadges": 33,
+      "Location": "Dublin, Ireland",
+      "Website": "",
+      "IsOnline": 0,
+      "JoinedAt": "2022-06-20 14:45:00",
+      "LastSeen": "2026-03-30 18:00:00"
+    },
+    {
+      "Id": 4,
+      "Username": "rust_ranger",
+      "DisplayName": "Yuki Tanaka",
+      "Email": "yuki.tanaka@example.com",
+      "Avatar": "https://i.pravatar.cc/150?img=15",
+      "Bio": "Systems programmer | Rust | C++ | Performance optimization",
+      "Reputation": 34200,
+      "GoldBadges": 18,
+      "SilverBadges": 67,
+      "BronzeBadges": 120,
+      "Location": "Tokyo, Japan",
+      "Website": "https://yukitanaka.dev",
+      "IsOnline": 1,
+      "JoinedAt": "2019-11-05 06:20:00",
+      "LastSeen": "2026-04-01 03:45:00"
+    },
+    {
+      "Id": 5,
+      "Username": "cloud_architect",
+      "DisplayName": "Priya Sharma",
+      "Email": "priya.sharma@example.com",
+      "Avatar": "https://i.pravatar.cc/150?img=9",
+      "Bio": "AWS Certified Solutions Architect | Kubernetes | Terraform",
+      "Reputation": 21300,
+      "GoldBadges": 8,
+      "SilverBadges": 35,
+      "BronzeBadges": 72,
+      "Location": "Hyderabad, India",
+      "Website": "https://priyasharma.cloud",
+      "IsOnline": 0,
+      "JoinedAt": "2020-08-12 11:30:00",
+      "LastSeen": "2026-03-31 20:10:00"
+    },
+    {
+      "Id": 6,
+      "Username": "data_alchemist",
+      "DisplayName": "Marcus Johnson",
+      "Email": "marcus.j@example.com",
+      "Avatar": "https://i.pravatar.cc/150?img=53",
+      "Bio": "Data Engineer | Apache Spark | Kafka | PostgreSQL",
+      "Reputation": 11890,
+      "GoldBadges": 3,
+      "SilverBadges": 19,
+      "BronzeBadges": 41,
+      "Location": "Austin, TX",
+      "Website": "",
+      "IsOnline": 0,
+      "JoinedAt": "2021-09-01 16:00:00",
+      "LastSeen": "2026-03-29 22:30:00"
+    },
+    {
+      "Id": 7,
+      "Username": "mobile_maven",
+      "DisplayName": "Fatima Al-Hassan",
+      "Email": "fatima.alhassan@example.com",
+      "Avatar": "https://i.pravatar.cc/150?img=25",
+      "Bio": "React Native | Flutter | iOS & Android Developer",
+      "Reputation": 7650,
+      "GoldBadges": 1,
+      "SilverBadges": 11,
+      "BronzeBadges": 28,
+      "Location": "Dubai, UAE",
+      "Website": "https://fatima.dev",
+      "IsOnline": 1,
+      "JoinedAt": "2023-01-18 09:15:00",
+      "LastSeen": "2026-04-01 07:00:00"
+    },
+    {
+      "Id": 8,
+      "Username": "security_sentinel",
+      "DisplayName": "Alex Rivera",
+      "Email": "alex.rivera@example.com",
+      "Avatar": "https://i.pravatar.cc/150?img=33",
+      "Bio": "Cybersecurity | Penetration Testing | OWASP | DevSecOps",
+      "Reputation": 18900,
+      "GoldBadges": 7,
+      "SilverBadges": 29,
+      "BronzeBadges": 55,
+      "Location": "Berlin, Germany",
+      "Website": "https://alexrivera.sec",
+      "IsOnline": 0,
+      "JoinedAt": "2020-04-22 13:00:00",
+      "LastSeen": "2026-03-31 16:45:00"
+    }
+  ],
+  "Tags": [
+    {
+      "Id": 1,
+      "Name": "javascript",
+      "Description": "ECMAScript and its dialects",
+      "Color": "#f7df1e",
+      "QuestionsCount": 2456
+    },
+    {
+      "Id": 2,
+      "Name": "python",
+      "Description": "Dynamically typed multi-purpose language",
+      "Color": "#3776ab",
+      "QuestionsCount": 3102
+    },
+    {
+      "Id": 3,
+      "Name": "react",
+      "Description": "JavaScript library for building UIs",
+      "Color": "#61dafb",
+      "QuestionsCount": 1847
+    },
+    {
+      "Id": 4,
+      "Name": "dotnet",
+      "Description": "Free cross-platform developer platform",
+      "Color": "#512bd4",
+      "QuestionsCount": 1203
+    },
+    {
+      "Id": 5,
+      "Name": "csharp",
+      "Description": "Multi-paradigm language by Microsoft",
+      "Color": "#239120",
+      "QuestionsCount": 1567
+    },
+    {
+      "Id": 6,
+      "Name": "postgresql",
+      "Description": "Open-source relational DBMS",
+      "Color": "#336791",
+      "QuestionsCount": 987
+    },
+    {
+      "Id": 7,
+      "Name": "docker",
+      "Description": "Container-based app deployment",
+      "Color": "#2496ed",
+      "QuestionsCount": 1456
+    },
+    {
+      "Id": 8,
+      "Name": "typescript",
+      "Description": "Typed superset of JavaScript",
+      "Color": "#3178c6",
+      "QuestionsCount": 1678
+    },
+    {
+      "Id": 9,
+      "Name": "aws",
+      "Description": "Amazon Web Services cloud platform",
+      "Color": "#ff9900",
+      "QuestionsCount": 2103
+    },
+    {
+      "Id": 10,
+      "Name": "machine-learning",
+      "Description": "AI branch focused on learning from data",
+      "Color": "#ff6f00",
+      "QuestionsCount": 1534
+    },
+    {
+      "Id": 11,
+      "Name": "kubernetes",
+      "Description": "Open-source container orchestration",
+      "Color": "#326ce5",
+      "QuestionsCount": 892
+    },
+    {
+      "Id": 12,
+      "Name": "nodejs",
+      "Description": "JavaScript runtime on V8 engine",
+      "Color": "#339933",
+      "QuestionsCount": 1345
+    },
+    {
+      "Id": 13,
+      "Name": "rust",
+      "Description": "Systems programming focused on safety",
+      "Color": "#dea584",
+      "QuestionsCount": 678
+    },
+    {
+      "Id": 14,
+      "Name": "fastapi",
+      "Description": "Modern Python web framework for APIs",
+      "Color": "#009688",
+      "QuestionsCount": 456
+    },
+    {
+      "Id": 15,
+      "Name": "security",
+      "Description": "App security, auth, and authorization",
+      "Color": "#d32f2f",
+      "QuestionsCount": 1890
+    },
+    {
+      "Id": 16,
+      "Name": "sql",
+      "Description": "Structured Query Language for RDBMS",
+      "Color": "#e38d13",
+      "QuestionsCount": 2345
+    },
+    {
+      "Id": 17,
+      "Name": "git",
+      "Description": "Distributed version control system",
+      "Color": "#f05032",
+      "QuestionsCount": 1123
+    },
+    {
+      "Id": 18,
+      "Name": "css",
+      "Description": "Cascading Style Sheets",
+      "Color": "#264de4",
+      "QuestionsCount": 1789
+    },
+    {
+      "Id": 19,
+      "Name": "api-design",
+      "Description": "RESTful and GraphQL API best practices",
+      "Color": "#7b1fa2",
+      "QuestionsCount": 567
+    },
+    {
+      "Id": 20,
+      "Name": "testing",
+      "Description": "Software testing methodologies",
+      "Color": "#388e3c",
+      "QuestionsCount": 890
+    }
+  ],
+  "Questions": [
+    {
+      "Id": 1,
+      "Title": "How to implement JWT refresh token rotation in .NET Core Web API?",
+      "Body": "I'm building a .NET Core 8 Web API and need secure JWT auth with refresh token rotation.\n\n```csharp\npublic class AuthService {\n    public string GenerateAccessToken(User user) {\n        var claims = new[] {\n            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),\n            new Claim(ClaimTypes.Email, user.Email)\n        };\n    }\n}\n```\n\nBest practices for: 1) Storing refresh tokens (DB vs Redis?) 2) Implementing rotation safely 3) Handling concurrent requests",
+      "UserId": 1,
+      "Votes": 47,
+      "Views": 1824,
+      "AnswersCount": 5,
+      "AcceptedAnswerId": 1,
+      "Status": "answered",
+      "IsBounty": 0,
+      "BountyAmount": 0,
+      "IsClosed": 0,
+      "IsProtected": 0,
+      "Favorites": 23,
+      "CreatedAt": "2026-03-28 10:15:00",
+      "UpdatedAt": "2026-03-29 08:30:00",
+      "LastActivityAt": "2026-04-02 09:12:54"
+    },
+    {
+      "Id": 2,
+      "Title": "React useEffect cleanup causing memory leak in WebSocket connection",
+      "Body": "Memory leak in React when using WebSocket inside useEffect.\n\n```jsx\nuseEffect(() => {\n  const ws = new WebSocket('wss://api.example.com/live');\n  ws.onmessage = (event) => {\n    setMessages(prev => [...prev, JSON.parse(event.data)]);\n  };\n  return () => { ws.close(); };\n}, []);\n```\n\nIssue gets worse with rapid page navigation.",
+      "UserId": 3,
+      "Votes": 89,
+      "Views": 4521,
+      "AnswersCount": 6,
+      "AcceptedAnswerId": 2,
+      "Status": "answered",
+      "IsBounty": 1,
+      "BountyAmount": 100,
+      "IsClosed": 0,
+      "IsProtected": 1,
+      "Favorites": 56,
+      "CreatedAt": "2026-03-25 16:45:00",
+      "UpdatedAt": "2026-03-26 09:00:00",
+      "LastActivityAt": "2026-03-31 11:15:00"
+    },
+    {
+      "Id": 3,
+      "Title": "Best approach for implementing RAG with pgvector in PostgreSQL?",
+      "Body": "Building a RAG pipeline with pgvector.\n\n```sql\nCREATE EXTENSION IF NOT EXISTS vector;\nCREATE TABLE document_embeddings (\n    id SERIAL PRIMARY KEY,\n    document_id UUID NOT NULL,\n    chunk_text TEXT NOT NULL,\n    embedding vector(1536),\n    metadata JSONB DEFAULT '{}'\n);\n```\n\n1) Table structure for similarity search? 2) Best embedding model for tech docs? 3) Chunking strategy? 4) Production-ready at 500K docs?",
+      "UserId": 2,
+      "Votes": 134,
+      "Views": 8920,
+      "AnswersCount": 8,
+      "AcceptedAnswerId": 3,
+      "Status": "answered",
+      "IsBounty": 1,
+      "BountyAmount": 250,
+      "IsClosed": 0,
+      "IsProtected": 1,
+      "Favorites": 89,
+      "CreatedAt": "2026-03-20 08:00:00",
+      "UpdatedAt": "2026-03-22 14:30:00",
+      "LastActivityAt": "2026-04-01 06:00:00"
+    },
+    {
+      "Id": 4,
+      "Title": "Docker multi-stage build failing with .NET 8 AOT compilation",
+      "Body": "Multi-stage Docker build with Native AOT fails in CI.\n\n```dockerfile\nFROM mcr.microsoft.com/dotnet/sdk:8.0 AS build\nRUN dotnet publish -c Release -r linux-x64 /p:PublishAot=true -o /app\nFROM mcr.microsoft.com/dotnet/runtime-deps:8.0-jammy-chiseled\nCOPY --from=build /app .\n```\n\nError: `lld-link: error: undefined symbol: __security_cookie`",
+      "UserId": 1,
+      "Votes": 32,
+      "Views": 2145,
+      "AnswersCount": 3,
+      "AcceptedAnswerId": 4,
+      "Status": "answered",
+      "IsBounty": 0,
+      "BountyAmount": 0,
+      "IsClosed": 0,
+      "IsProtected": 0,
+      "Favorites": 15,
+      "CreatedAt": "2026-03-27 14:20:00",
+      "UpdatedAt": "2026-03-27 14:20:00",
+      "LastActivityAt": "2026-03-29 10:00:00"
+    },
+    {
+      "Id": 5,
+      "Title": "Optimizing React rendering performance with large data tables (10k+ rows)",
+      "Body": "Data dashboard with 10,000+ rows. Basic map() rendering makes page unresponsive.\n\n```tsx\nconst filtered = useMemo(() =>\n  data.filter(row => Object.values(row).some(v =>\n    String(v).toLowerCase().includes(filter)))\n  .sort((a, b) => a[sortBy] > b[sortBy] ? 1 : -1),\n  [data, filter, sortBy]\n);\n```\n\nShould I use virtualization? Which library for React 19?",
+      "UserId": 7,
+      "Votes": 67,
+      "Views": 5678,
+      "AnswersCount": 7,
+      "AcceptedAnswerId": null,
+      "Status": "open",
+      "IsBounty": 1,
+      "BountyAmount": 150,
+      "IsClosed": 0,
+      "IsProtected": 0,
+      "Favorites": 41,
+      "CreatedAt": "2026-03-22 11:30:00",
+      "UpdatedAt": "2026-03-24 16:00:00",
+      "LastActivityAt": "2026-03-31 20:45:00"
+    },
+    {
+      "Id": 6,
+      "Title": "Kubernetes pod keeps restarting - CrashLoopBackOff with exit code 137",
+      "Body": "Deployment crashes with CrashLoopBackOff. Pod runs ~30s before OOMKilled (exit code 137).\n\n```yaml\nresources:\n  requests: { memory: '256Mi', cpu: '250m' }\n  limits: { memory: '512Mi', cpu: '500m' }\n```\n\nNode.js Express API. Memory spikes during JSON parsing of large payloads.",
+      "UserId": 5,
+      "Votes": 56,
+      "Views": 3456,
+      "AnswersCount": 5,
+      "AcceptedAnswerId": 6,
+      "Status": "answered",
+      "IsBounty": 0,
+      "BountyAmount": 0,
+      "IsClosed": 0,
+      "IsProtected": 0,
+      "Favorites": 28,
+      "CreatedAt": "2026-03-26 09:00:00",
+      "UpdatedAt": "2026-03-26 09:00:00",
+      "LastActivityAt": "2026-03-30 16:30:00"
+    },
+    {
+      "Id": 7,
+      "Title": "How to properly set up OAuth 2.0 PKCE flow for a React SPA?",
+      "Body": "Need OAuth 2.0 with PKCE for React SPA.\n\n```typescript\nconst generateCodeVerifier = (): string => {\n  const array = new Uint8Array(32);\n  crypto.getRandomValues(array);\n  return base64UrlEncode(array);\n};\n```\n\n1) Generate code_verifier every login? 2) Where to store it? 3) Handle callback URL in SPA? 4) oidc-client-ts or @auth0/auth0-react?",
+      "UserId": 8,
+      "Votes": 78,
+      "Views": 6789,
+      "AnswersCount": 5,
+      "AcceptedAnswerId": null,
+      "Status": "answered",
+      "IsBounty": 0,
+      "BountyAmount": 0,
+      "IsClosed": 0,
+      "IsProtected": 1,
+      "Favorites": 67,
+      "CreatedAt": "2026-03-18 13:00:00",
+      "UpdatedAt": "2026-03-19 10:00:00",
+      "LastActivityAt": "2026-03-28 09:15:00"
+    },
+    {
+      "Id": 8,
+      "Title": "PostgreSQL JSONB query performance degradation after 1M records",
+      "Body": "PostgreSQL 16 with JSONB columns. 1.2M records = 3-5s queries.\n\n```sql\nSELECT u.id, p.data->>'firstName'\nFROM users u JOIN user_profiles p ON u.id = p.user_id\nWHERE p.data @> '{\"preferences\": {\"theme\": \"dark\"}}'\nORDER BY u.created_at DESC LIMIT 50;\n```\n\nWhat indexing strategy for complex JSONB at scale?",
+      "UserId": 6,
+      "Votes": 45,
+      "Views": 3210,
+      "AnswersCount": 4,
+      "AcceptedAnswerId": null,
+      "Status": "answered",
+      "IsBounty": 0,
+      "BountyAmount": 0,
+      "IsClosed": 0,
+      "IsProtected": 0,
+      "Favorites": 34,
+      "CreatedAt": "2026-03-24 07:30:00",
+      "UpdatedAt": "2026-03-25 11:00:00",
+      "LastActivityAt": "2026-03-29 15:00:00"
+    },
+    {
+      "Id": 9,
+      "Title": "Rust lifetime errors when building an async web scraper with Tokio",
+      "Body": "Async web scraper in Rust with Tokio. Lifetime issues with shared state.\n\n```rust\nimpl Scraper {\n    async fn scrape_all(&self, urls: Vec<String>) {\n        for url in urls {\n            tokio::spawn(async move {\n                self.scrape_url(&url).await // ERROR: self does not live long enough\n            });\n        }\n    }\n}\n```",
+      "UserId": 4,
+      "Votes": 38,
+      "Views": 1876,
+      "AnswersCount": 3,
+      "AcceptedAnswerId": null,
+      "Status": "open",
+      "IsBounty": 0,
+      "BountyAmount": 0,
+      "IsClosed": 0,
+      "IsProtected": 0,
+      "Favorites": 19,
+      "CreatedAt": "2026-03-29 05:00:00",
+      "UpdatedAt": "2026-03-29 05:00:00",
+      "LastActivityAt": "2026-03-31 12:00:00"
+    },
+    {
+      "Id": 10,
+      "Title": "Building a real-time collaborative code editor - architecture advice needed",
+      "Body": "Want to build collaborative code editor (like VS Code Live Share).\n\nStack: React + Monaco Editor, Node.js + WebSocket, CRDT (Yjs) or OT (ShareDB), PostgreSQL + Redis.\n\n1) CRDT vs OT? 2) Multiple user cursors? 3) Conflict resolution? 4) WebSocket or WebRTC?",
+      "UserId": 3,
+      "Votes": 156,
+      "Views": 12340,
+      "AnswersCount": 12,
+      "AcceptedAnswerId": 7,
+      "Status": "answered",
+      "IsBounty": 1,
+      "BountyAmount": 500,
+      "IsClosed": 0,
+      "IsProtected": 1,
+      "Favorites": 134,
+      "CreatedAt": "2026-03-15 18:00:00",
+      "UpdatedAt": "2026-03-20 09:30:00",
+      "LastActivityAt": "2026-04-01 08:00:00"
+    },
+    {
+      "Id": 11,
+      "Title": "What's the recommended way to handle file uploads in FastAPI with S3?",
+      "Body": "Multipart file uploads in FastAPI → S3. Files up to 100MB.\n\n```python\n@app.post('/upload')\nasync def upload_file(file: UploadFile = File(...)):\n    contents = await file.read()  # Loads entire file in memory!\n    s3.put_object(Bucket='my-bucket', Key=f'uploads/{file.filename}', Body=contents)\n```\n\nProduction-ready approach for large files?",
+      "UserId": 2,
+      "Votes": 29,
+      "Views": 1567,
+      "AnswersCount": 3,
+      "AcceptedAnswerId": 8,
+      "Status": "open",
+      "IsBounty": 0,
+      "BountyAmount": 0,
+      "IsClosed": 0,
+      "IsProtected": 0,
+      "Favorites": 12,
+      "CreatedAt": "2026-03-30 12:00:00",
+      "UpdatedAt": "2026-03-30 12:00:00",
+      "LastActivityAt": "2026-03-31 18:30:00"
+    },
+    {
+      "Id": 12,
+      "Title": "[Discussion] What's your preferred state management in React 2026?",
+      "Body": "React 19 stable + Server Components. What state management in 2026?\n\n- Zustand — Simple, lightweight\n- Jotai — Atomic, fine-grained\n- Redux Toolkit — Robust but heavy\n- TanStack Query — Server state\n- React Context — Built-in but re-renders\n- Signals\n\nWhat's your team using and why?",
+      "UserId": 7,
+      "Votes": 203,
+      "Views": 15670,
+      "AnswersCount": 24,
+      "AcceptedAnswerId": null,
+      "Status": "discussion",
+      "IsBounty": 0,
+      "BountyAmount": 0,
+      "IsClosed": 0,
+      "IsProtected": 1,
+      "Favorites": 178,
+      "CreatedAt": "2026-03-10 10:00:00",
+      "UpdatedAt": "2026-03-10 10:00:00",
+      "LastActivityAt": "2026-04-01 10:00:00"
+    },
+    {
+      "Id": 13,
+      "Title": "How to optimize database queries in Node.js?",
+      "Body": "I have a large database and my queries are getting slow. What are the best practices for optimization?",
+      "UserId": 1,
+      "Votes": 0,
+      "Views": 0,
+      "AnswersCount": 0,
+      "AcceptedAnswerId": null,
+      "Status": "open",
+      "IsBounty": 0,
+      "BountyAmount": 0,
+      "IsClosed": 0,
+      "IsProtected": 0,
+      "Favorites": 0,
+      "CreatedAt": "2026-04-02 08:46:34",
+      "UpdatedAt": "2026-04-02 08:46:34",
+      "LastActivityAt": "2026-04-02 08:46:34"
+    },
+    {
+      "Id": 14,
+      "Title": "Database optimization",
+      "Body": "How to optimize queries?",
+      "UserId": 1,
+      "Votes": 0,
+      "Views": 0,
+      "AnswersCount": 0,
+      "AcceptedAnswerId": null,
+      "Status": "open",
+      "IsBounty": 0,
+      "BountyAmount": 0,
+      "IsClosed": 0,
+      "IsProtected": 0,
+      "Favorites": 0,
+      "CreatedAt": "2026-04-02 09:02:12",
+      "UpdatedAt": "2026-04-02 09:02:12",
+      "LastActivityAt": "2026-04-02 09:02:12"
+    }
+  ],
+  "QuestionTags": [
+    {
+      "QuestionId": 1,
+      "TagId": 4
+    },
+    {
+      "QuestionId": 1,
+      "TagId": 5
+    },
+    {
+      "QuestionId": 1,
+      "TagId": 15
+    },
+    {
+      "QuestionId": 1,
+      "TagId": 19
+    },
+    {
+      "QuestionId": 2,
+      "TagId": 3
+    },
+    {
+      "QuestionId": 2,
+      "TagId": 1
+    },
+    {
+      "QuestionId": 2,
+      "TagId": 8
+    },
+    {
+      "QuestionId": 3,
+      "TagId": 6
+    },
+    {
+      "QuestionId": 3,
+      "TagId": 2
+    },
+    {
+      "QuestionId": 3,
+      "TagId": 10
+    },
+    {
+      "QuestionId": 3,
+      "TagId": 14
+    },
+    {
+      "QuestionId": 4,
+      "TagId": 7
+    },
+    {
+      "QuestionId": 4,
+      "TagId": 4
+    },
+    {
+      "QuestionId": 4,
+      "TagId": 5
+    },
+    {
+      "QuestionId": 5,
+      "TagId": 3
+    },
+    {
+      "QuestionId": 5,
+      "TagId": 1
+    },
+    {
+      "QuestionId": 5,
+      "TagId": 8
+    },
+    {
+      "QuestionId": 5,
+      "TagId": 18
+    },
+    {
+      "QuestionId": 6,
+      "TagId": 11
+    },
+    {
+      "QuestionId": 6,
+      "TagId": 7
+    },
+    {
+      "QuestionId": 6,
+      "TagId": 12
+    },
+    {
+      "QuestionId": 6,
+      "TagId": 9
+    },
+    {
+      "QuestionId": 7,
+      "TagId": 3
+    },
+    {
+      "QuestionId": 7,
+      "TagId": 15
+    },
+    {
+      "QuestionId": 7,
+      "TagId": 8
+    },
+    {
+      "QuestionId": 7,
+      "TagId": 19
+    },
+    {
+      "QuestionId": 8,
+      "TagId": 6
+    },
+    {
+      "QuestionId": 8,
+      "TagId": 16
+    },
+    {
+      "QuestionId": 8,
+      "TagId": 4
+    },
+    {
+      "QuestionId": 9,
+      "TagId": 13
+    },
+    {
+      "QuestionId": 9,
+      "TagId": 19
+    },
+    {
+      "QuestionId": 9,
+      "TagId": 20
+    },
+    {
+      "QuestionId": 10,
+      "TagId": 1
+    },
+    {
+      "QuestionId": 10,
+      "TagId": 3
+    },
+    {
+      "QuestionId": 10,
+      "TagId": 12
+    },
+    {
+      "QuestionId": 10,
+      "TagId": 19
+    },
+    {
+      "QuestionId": 11,
+      "TagId": 2
+    },
+    {
+      "QuestionId": 11,
+      "TagId": 14
+    },
+    {
+      "QuestionId": 11,
+      "TagId": 9
+    },
+    {
+      "QuestionId": 12,
+      "TagId": 3
+    },
+    {
+      "QuestionId": 12,
+      "TagId": 1
+    },
+    {
+      "QuestionId": 12,
+      "TagId": 8
+    },
+    {
+      "QuestionId": 13,
+      "TagId": 12
+    },
+    {
+      "QuestionId": 14,
+      "TagId": 12
+    }
+  ],
+  "Answers": [
+    {
+      "Id": 1,
+      "QuestionId": 1,
+      "UserId": 8,
+      "Body": "Production-ready JWT refresh token rotation:\n\n```csharp\npublic async Task<TokenPair> RotateRefreshToken(string oldToken) {\n    var stored = await _context.RefreshTokens.FirstOrDefaultAsync(t => t.Token == oldToken);\n    if (stored == null) throw new SecurityTokenException(\"Invalid\");\n    if (stored.IsUsed) {\n        await InvalidateTokenFamily(stored.FamilyId);\n        throw new SecurityTokenException(\"Token reuse detected\");\n    }\n    stored.IsUsed = true;\n    var newToken = GenerateRefreshToken(stored.FamilyId);\n    _context.RefreshTokens.Add(newToken);\n    await _context.SaveChangesAsync();\n    return new TokenPair(GenerateAccessToken(stored.UserId), newToken.Token);\n}\n```\n\nUse optimistic concurrency with a version column for concurrent requests.",
+      "Votes": 52,
+      "IsAccepted": 1,
+      "CreatedAt": "2026-03-28 12:30:00",
+      "UpdatedAt": "2026-03-28 14:00:00"
+    },
+    {
+      "Id": 2,
+      "QuestionId": 2,
+      "UserId": 2,
+      "Body": "The fix: ws.close() is async and your component might re-mount before it completes.\n\n```tsx\nuseEffect(() => {\n  mountedRef.current = true;\n  const ws = new WebSocket(url);\n  ws.onmessage = (e) => { if (!mountedRef.current) return; };\n  return () => {\n    mountedRef.current = false;\n    ws.onclose = null; // KEY: prevents reconnection loops\n    ws.close(1000, 'Unmounting');\n  };\n}, [url]);\n```",
+      "Votes": 95,
+      "IsAccepted": 1,
+      "CreatedAt": "2026-03-25 18:30:00",
+      "UpdatedAt": "2026-03-26 10:00:00"
+    },
+    {
+      "Id": 3,
+      "QuestionId": 3,
+      "UserId": 4,
+      "Body": "Running pgvector with ~800K docs in production. Use HNSW:\n\n```sql\nCREATE INDEX idx_chunks_embedding ON document_chunks\n    USING hnsw (embedding vector_cosine_ops)\n    WITH (m = 16, ef_construction = 64);\n```\n\nEmbedding: text-embedding-3-large (1536 dims) or nomic-embed-text (open-source).\npgvector is production-ready at 500K. Set maintenance_work_mem = '2GB'.",
+      "Votes": 142,
+      "IsAccepted": 1,
+      "CreatedAt": "2026-03-20 14:00:00",
+      "UpdatedAt": "2026-03-22 16:00:00"
+    },
+    {
+      "Id": 4,
+      "QuestionId": 4,
+      "UserId": 5,
+      "Body": "The __security_cookie error = AOT needs clang in the build container.\n\n```dockerfile\nFROM mcr.microsoft.com/dotnet/sdk:8.0 AS build\nRUN apt-get update && apt-get install -y clang zlib1g-dev\nRUN dotnet publish -c Release -r linux-x64 /p:PublishAot=true /p:StripSymbols=true -o /app\n```\n\nFinal image ~30-50MB with chiseled base.",
+      "Votes": 38,
+      "IsAccepted": 1,
+      "CreatedAt": "2026-03-27 16:00:00",
+      "UpdatedAt": "2026-03-27 16:00:00"
+    },
+    {
+      "Id": 5,
+      "QuestionId": 5,
+      "UserId": 4,
+      "Body": "Use @tanstack/react-virtual:\n\n```tsx\nconst virtualizer = useVirtualizer({\n  count: data.length,\n  getScrollElement: () => parentRef.current,\n  estimateSize: () => 48,\n  overscan: 20,\n});\n```\n\nRenders only visible rows. Went from 3s to <16ms on 50K rows.",
+      "Votes": 71,
+      "IsAccepted": 0,
+      "CreatedAt": "2026-03-22 14:00:00",
+      "UpdatedAt": "2026-03-23 09:00:00"
+    },
+    {
+      "Id": 6,
+      "QuestionId": 6,
+      "UserId": 3,
+      "Body": "Exit code 137 = OOMKilled. Fix:\n\n```yaml\nlimits:\n  memory: '1Gi'\n```\n\nUse streaming for large JSON:\n```javascript\nreq.pipe(JSONStream.parse('*')).on('data', processChunk);\n```\n\nAlso set --max-old-space-size in container CMD.",
+      "Votes": 44,
+      "IsAccepted": 1,
+      "CreatedAt": "2026-03-26 11:00:00",
+      "UpdatedAt": "2026-03-26 11:00:00"
+    },
+    {
+      "Id": 7,
+      "QuestionId": 10,
+      "UserId": 4,
+      "Body": "Built something similar. Go with CRDT (Yjs):\n\n1. Conflict-free by design\n2. y-monaco bindings for Monaco Editor\n3. Works offline, syncs on reconnect\n\nUse Yjs awareness protocol for cursors. WebSocket over WebRTC — NAT traversal is painful.",
+      "Votes": 89,
+      "IsAccepted": 1,
+      "CreatedAt": "2026-03-16 09:00:00",
+      "UpdatedAt": "2026-03-18 14:00:00"
+    },
+    {
+      "Id": 8,
+      "QuestionId": 11,
+      "UserId": 1,
+      "Body": "Use boto3 with multipart upload for streaming:\n\n```python\nimport boto3\nfrom fastapi import UploadFile\n\n@app.post('/upload')\nasync def upload_file(file: UploadFile):\n    s3 = boto3.client('s3')\n    with file.file as f:\n        s3.upload_fileobj(f, 'my-bucket', file.filename)\n    return {'url': f'https://my-bucket.s3.amazonaws.com/{file.filename}'}\n```\n\nStreams directly to S3 without loading in memory. For 100MB+ files, use multipart upload.",
+      "Votes": 67,
+      "IsAccepted": 1,
+      "CreatedAt": "2026-03-30 13:45:00",
+      "UpdatedAt": "2026-03-30 14:30:00"
+    },
+    {
+      "Id": 9,
+      "QuestionId": 11,
+      "UserId": 6,
+      "Body": "Consider using python-multipart with streaming, not file.read():\n\n```python\nfrom fastapi import BackgroundTasks\n\n@app.post('/upload')\nasync def upload_file(file: UploadFile, background_tasks: BackgroundTasks):\n    filename = f'{uuid.uuid4()}_{file.filename}'\n    # Upload in background so response returns immediately\n    background_tasks.add_task(upload_to_s3, file, filename)\n    return {'status': 'Processing', 'filename': filename}\n\nasync def upload_to_s3(file: UploadFile, filename: str):\n    s3.upload_fileobj(file.file, 'bucket', filename)\n```\n\nBackground tasks + multipart = production-ready.",
+      "Votes": 54,
+      "IsAccepted": 0,
+      "CreatedAt": "2026-03-30 14:15:00",
+      "UpdatedAt": "2026-03-30 15:00:00"
+    },
+    {
+      "Id": 10,
+      "QuestionId": 11,
+      "UserId": 8,
+      "Body": "Use boto3 Presigned URLs for client-side upload:\n\n```python\n@app.post('/get-upload-url')\nasync def get_presigned_url(filename: str):\n    s3 = boto3.client('s3')\n    url = s3.generate_presigned_post(\n        'my-bucket',\n        filename,\n        ExpiresIn=3600\n    )\n    return url\n```\n\nClient uploads directly to S3 using the presigned URL. Your API never touches the file. No memory usage on backend.",
+      "Votes": 78,
+      "IsAccepted": 0,
+      "CreatedAt": "2026-03-30 15:30:00",
+      "UpdatedAt": "2026-03-30 16:00:00"
+    },
+    {
+      "Id": 11,
+      "QuestionId": 1,
+      "UserId": 2,
+      "Body": "Use connection pooling and indexing for better performance",
+      "Votes": 0,
+      "IsAccepted": 0,
+      "CreatedAt": "2026-04-02 09:12:54",
+      "UpdatedAt": "2026-04-02 09:12:54"
+    }
+  ],
+  "Comments": [
+    {
+      "Id": 1,
+      "UserId": 1,
+      "QuestionId": null,
+      "AnswerId": 1,
+      "Body": "This is exactly what I needed! Do you recommend a specific expiry time for refresh tokens?",
+      "Votes": 5,
+      "CreatedAt": "2026-03-28 13:00:00"
+    },
+    {
+      "Id": 2,
+      "UserId": 8,
+      "QuestionId": null,
+      "AnswerId": 1,
+      "Body": "@dev_ninja I use 7 days for web, 30 days for mobile. Sliding expiration works too.",
+      "Votes": 8,
+      "CreatedAt": "2026-03-28 13:15:00"
+    },
+    {
+      "Id": 3,
+      "UserId": 5,
+      "QuestionId": null,
+      "AnswerId": 1,
+      "Body": "Also store IP and User-Agent with each refresh token for additional security validation.",
+      "Votes": 12,
+      "CreatedAt": "2026-03-28 15:00:00"
+    },
+    {
+      "Id": 4,
+      "UserId": 6,
+      "QuestionId": null,
+      "AnswerId": 1,
+      "Body": "What about using Redis with expiry instead of database? Performance implications?",
+      "Votes": 3,
+      "CreatedAt": "2026-03-28 16:30:00"
+    },
+    {
+      "Id": 5,
+      "UserId": 3,
+      "QuestionId": null,
+      "AnswerId": 2,
+      "Body": "Solved! Key was setting onclose to null before close(). Thank you!",
+      "Votes": 15,
+      "CreatedAt": "2026-03-25 19:00:00"
+    },
+    {
+      "Id": 6,
+      "UserId": 7,
+      "QuestionId": null,
+      "AnswerId": 2,
+      "Body": "Also recommend AbortController pattern for fetch-based fallback.",
+      "Votes": 7,
+      "CreatedAt": "2026-03-26 08:00:00"
+    },
+    {
+      "Id": 7,
+      "UserId": 8,
+      "QuestionId": null,
+      "AnswerId": 2,
+      "Body": "This approach works perfectly with SockJS as fallback too!",
+      "Votes": 11,
+      "CreatedAt": "2026-03-26 09:15:00"
+    },
+    {
+      "Id": 8,
+      "UserId": 2,
+      "QuestionId": null,
+      "AnswerId": 3,
+      "Body": "HNSW tip alone was worth the bounty. Recall improved from 78% to 94%.",
+      "Votes": 28,
+      "CreatedAt": "2026-03-20 16:00:00"
+    },
+    {
+      "Id": 9,
+      "UserId": 6,
+      "QuestionId": null,
+      "AnswerId": 3,
+      "Body": "Same setup for multi-tenant SaaS? Concerns with RLS + pgvector?",
+      "Votes": 9,
+      "CreatedAt": "2026-03-21 08:00:00"
+    },
+    {
+      "Id": 10,
+      "UserId": 4,
+      "QuestionId": null,
+      "AnswerId": 3,
+      "Body": "@data_alchemist Yes, add tenant_id and include in partial indexes. Minimal overhead.",
+      "Votes": 14,
+      "CreatedAt": "2026-03-21 09:30:00"
+    },
+    {
+      "Id": 11,
+      "UserId": 1,
+      "QuestionId": null,
+      "AnswerId": 3,
+      "Body": "What happens when you exceed vector dimensions? Error or silent truncation?",
+      "Votes": 6,
+      "CreatedAt": "2026-03-22 10:00:00"
+    },
+    {
+      "Id": 12,
+      "UserId": 1,
+      "QuestionId": null,
+      "AnswerId": 4,
+      "Body": "Fixed! Final image is 42MB. Thank you!",
+      "Votes": 6,
+      "CreatedAt": "2026-03-27 17:30:00"
+    },
+    {
+      "Id": 13,
+      "UserId": 3,
+      "QuestionId": null,
+      "AnswerId": 4,
+      "Body": "Clang requirement tripped us up for a week. Docs could be clearer.",
+      "Votes": 4,
+      "CreatedAt": "2026-03-27 18:00:00"
+    },
+    {
+      "Id": 14,
+      "UserId": 2,
+      "QuestionId": 5,
+      "AnswerId": null,
+      "Body": "Tried react-window? Lighter than react-virtualized for simple tables.",
+      "Votes": 4,
+      "CreatedAt": "2026-03-22 12:00:00"
+    },
+    {
+      "Id": 15,
+      "UserId": 7,
+      "QuestionId": 5,
+      "AnswerId": null,
+      "Body": "@dev_tools react-virtual is newer and much better. Recommend switching.",
+      "Votes": 9,
+      "CreatedAt": "2026-03-22 13:30:00"
+    },
+    {
+      "Id": 16,
+      "UserId": 5,
+      "QuestionId": 6,
+      "AnswerId": null,
+      "Body": "The streaming tip is gold. Changed our Node.js upload from 400MB to 45MB peak!",
+      "Votes": 22,
+      "CreatedAt": "2026-03-26 12:00:00"
+    },
+    {
+      "Id": 17,
+      "UserId": 1,
+      "QuestionId": 6,
+      "AnswerId": null,
+      "Body": "Any recommendations for monitoring memory in production?",
+      "Votes": 3,
+      "CreatedAt": "2026-03-26 13:00:00"
+    },
+    {
+      "Id": 18,
+      "UserId": 3,
+      "QuestionId": 7,
+      "AnswerId": null,
+      "Body": "Using auth0-react now. Much easier than manual PKCE implementation.",
+      "Votes": 18,
+      "CreatedAt": "2026-03-18 14:00:00"
+    },
+    {
+      "Id": 19,
+      "UserId": 8,
+      "QuestionId": 7,
+      "AnswerId": null,
+      "Body": "Does this work with custom OAuth providers or just Auth0?",
+      "Votes": 5,
+      "CreatedAt": "2026-03-18 15:30:00"
+    },
+    {
+      "Id": 20,
+      "UserId": 4,
+      "QuestionId": 10,
+      "AnswerId": null,
+      "Body": "Amazing project idea. Would love to see progress on GitHub!",
+      "Votes": 11,
+      "CreatedAt": "2026-03-15 20:00:00"
+    },
+    {
+      "Id": 21,
+      "UserId": 7,
+      "QuestionId": 10,
+      "AnswerId": null,
+      "Body": "Building something similar. Is Yjs production-ready for 1000+ concurrent users?",
+      "Votes": 8,
+      "CreatedAt": "2026-03-16 10:00:00"
+    },
+    {
+      "Id": 22,
+      "UserId": 1,
+      "QuestionId": 10,
+      "AnswerId": null,
+      "Body": "Database sync strategy with Yjs? How do you persist CRDT state?",
+      "Votes": 6,
+      "CreatedAt": "2026-03-17 08:00:00"
+    },
+    {
+      "Id": 23,
+      "UserId": 8,
+      "QuestionId": 8,
+      "AnswerId": null,
+      "Body": "This query planner output is beautiful. How often do you ANALYZE?",
+      "Votes": 7,
+      "CreatedAt": "2026-03-24 08:30:00"
+    },
+    {
+      "Id": 24,
+      "UserId": 2,
+      "QuestionId": 8,
+      "AnswerId": null,
+      "Body": "Can you share the JSONB schema optimization you mentioned?",
+      "Votes": 4,
+      "CreatedAt": "2026-03-25 09:00:00"
+    },
+    {
+      "Id": 25,
+      "UserId": 3,
+      "QuestionId": 8,
+      "AnswerId": null,
+      "Body": "Multi-part upload recommendation is production-grade. Been using this for 6 months.",
+      "Votes": 14,
+      "CreatedAt": "2026-03-30 14:45:00"
+    },
+    {
+      "Id": 26,
+      "UserId": 5,
+      "QuestionId": 8,
+      "AnswerId": null,
+      "Body": "What's the chunk size you recommend for large files?",
+      "Votes": 5,
+      "CreatedAt": "2026-03-30 15:15:00"
+    },
+    {
+      "Id": 27,
+      "UserId": 6,
+      "QuestionId": 8,
+      "AnswerId": null,
+      "Body": "Does boto3 handle retries automatically or need custom retry logic?",
+      "Votes": 3,
+      "CreatedAt": "2026-03-30 15:45:00"
+    },
+    {
+      "Id": 28,
+      "UserId": 7,
+      "QuestionId": 9,
+      "AnswerId": null,
+      "Body": "Background tasks + multipart solves the timeout issue perfectly!",
+      "Votes": 9,
+      "CreatedAt": "2026-03-30 14:20:00"
+    },
+    {
+      "Id": 29,
+      "UserId": 1,
+      "QuestionId": 9,
+      "AnswerId": null,
+      "Body": "How do you monitor background task failures in production?",
+      "Votes": 4,
+      "CreatedAt": "2026-03-30 14:50:00"
+    },
+    {
+      "Id": 30,
+      "UserId": 2,
+      "QuestionId": 10,
+      "AnswerId": null,
+      "Body": "Presigned URLs are the way. No server-side bottleneck!",
+      "Votes": 16,
+      "CreatedAt": "2026-03-30 16:15:00"
+    },
+    {
+      "Id": 31,
+      "UserId": 4,
+      "QuestionId": 10,
+      "AnswerId": null,
+      "Body": "Security question: Can users modify the presigned URL to upload elsewhere?",
+      "Votes": 7,
+      "CreatedAt": "2026-03-30 16:45:00"
+    },
+    {
+      "Id": 32,
+      "UserId": 8,
+      "QuestionId": 10,
+      "AnswerId": null,
+      "Body": "@security_dev No, the signature prevents tampering. S3 validates the signature server-side.",
+      "Votes": 10,
+      "CreatedAt": "2026-03-30 17:00:00"
+    },
+    {
+      "Id": 33,
+      "UserId": 1,
+      "QuestionId": 12,
+      "AnswerId": null,
+      "Body": "Our team switched Redux → Zustand last year. Never looked back.",
+      "Votes": 18,
+      "CreatedAt": "2026-03-10 12:00:00"
+    },
+    {
+      "Id": 34,
+      "UserId": 3,
+      "QuestionId": 12,
+      "AnswerId": null,
+      "Body": "Jotai's atomic design resonates with Recoil users. Great DX!",
+      "Votes": 12,
+      "CreatedAt": "2026-03-10 13:00:00"
+    },
+    {
+      "Id": 35,
+      "UserId": 6,
+      "QuestionId": 12,
+      "AnswerId": null,
+      "Body": "Context API + useMemo is underrated. Works for most projects.",
+      "Votes": 8,
+      "CreatedAt": "2026-03-10 14:00:00"
+    },
+    {
+      "Id": 36,
+      "UserId": 7,
+      "QuestionId": 12,
+      "AnswerId": null,
+      "Body": "TanStack Query changed how we handle server state. Highly recommend.",
+      "Votes": 15,
+      "CreatedAt": "2026-03-10 15:00:00"
+    },
+    {
+      "Id": 37,
+      "UserId": 3,
+      "QuestionId": null,
+      "AnswerId": 11,
+      "Body": "Great explanation! Have you considered handling errors with retries?",
+      "Votes": 0,
+      "CreatedAt": "2026-04-21 21:32:38"
+    },
+    {
+      "Id": 38,
+      "UserId": 3,
+      "QuestionId": null,
+      "AnswerId": 11,
+      "Body": "Great explanation! Have you considered handling errors with retries mechanism?",
+      "Votes": 0,
+      "CreatedAt": "2026-04-21 21:32:51"
+    }
+  ],
+  "Votes": [
+    {
+      "Id": 1,
+      "UserId": 2,
+      "TargetType": "question",
+      "TargetId": 1,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 2,
+      "UserId": 3,
+      "TargetType": "question",
+      "TargetId": 1,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 3,
+      "UserId": 4,
+      "TargetType": "question",
+      "TargetId": 1,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 4,
+      "UserId": 5,
+      "TargetType": "question",
+      "TargetId": 1,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 5,
+      "UserId": 1,
+      "TargetType": "question",
+      "TargetId": 2,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 6,
+      "UserId": 2,
+      "TargetType": "question",
+      "TargetId": 2,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 7,
+      "UserId": 4,
+      "TargetType": "question",
+      "TargetId": 2,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 8,
+      "UserId": 1,
+      "TargetType": "question",
+      "TargetId": 3,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 9,
+      "UserId": 3,
+      "TargetType": "question",
+      "TargetId": 3,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 10,
+      "UserId": 5,
+      "TargetType": "question",
+      "TargetId": 3,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 11,
+      "UserId": 1,
+      "TargetType": "answer",
+      "TargetId": 1,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 12,
+      "UserId": 2,
+      "TargetType": "answer",
+      "TargetId": 1,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 13,
+      "UserId": 3,
+      "TargetType": "answer",
+      "TargetId": 1,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 14,
+      "UserId": 1,
+      "TargetType": "answer",
+      "TargetId": 2,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 15,
+      "UserId": 4,
+      "TargetType": "answer",
+      "TargetId": 2,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 16,
+      "UserId": 5,
+      "TargetType": "answer",
+      "TargetId": 2,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 17,
+      "UserId": 7,
+      "TargetType": "question",
+      "TargetId": 8,
+      "Value": -1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 18,
+      "UserId": 6,
+      "TargetType": "answer",
+      "TargetId": 3,
+      "Value": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    }
+  ],
+  "Media": [
+    {
+      "Id": 1,
+      "QuestionId": 1,
+      "AnswerId": null,
+      "Type": "image",
+      "Url": "https://placehold.co/800x400/1a1a2e/16213e?text=JWT+Token+Flow",
+      "Thumbnail": "https://placehold.co/200x100/1a1a2e/16213e?text=JWT",
+      "AltText": "JWT refresh token rotation flow",
+      "Width": 800,
+      "Height": 400,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 2,
+      "QuestionId": 2,
+      "AnswerId": null,
+      "Type": "image",
+      "Url": "https://placehold.co/800x400/1a1a2e/16213e?text=Chrome+Memory+Profiler",
+      "Thumbnail": "https://placehold.co/200x100/1a1a2e/16213e?text=Memory",
+      "AltText": "Chrome DevTools memory leak",
+      "Width": 800,
+      "Height": 400,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 3,
+      "QuestionId": 3,
+      "AnswerId": null,
+      "Type": "image",
+      "Url": "https://placehold.co/900x500/0d1117/58a6ff?text=RAG+Architecture",
+      "Thumbnail": "https://placehold.co/200x110/0d1117/58a6ff?text=RAG",
+      "AltText": "RAG Architecture diagram",
+      "Width": 900,
+      "Height": 500,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 4,
+      "QuestionId": 4,
+      "AnswerId": null,
+      "Type": "image",
+      "Url": "https://placehold.co/800x300/2d1b1b/ff6b6b?text=CI+Pipeline+Error",
+      "Thumbnail": "https://placehold.co/200x75/2d1b1b/ff6b6b?text=CI",
+      "AltText": "CI pipeline error log",
+      "Width": 800,
+      "Height": 300,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 5,
+      "QuestionId": 5,
+      "AnswerId": null,
+      "Type": "video",
+      "Url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "Thumbnail": "https://placehold.co/320x180/0f0f0f/ffffff?text=Perf+Demo",
+      "AltText": "Rendering lag demo",
+      "Width": null,
+      "Height": null,
+      "Duration": "00:02:34",
+      "Platform": "youtube",
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 6,
+      "QuestionId": 6,
+      "AnswerId": null,
+      "Type": "image",
+      "Url": "https://placehold.co/800x450/0d1117/4fc3f7?text=kubectl+describe+pod",
+      "Thumbnail": "https://placehold.co/200x112/0d1117/4fc3f7?text=Pod",
+      "AltText": "kubectl OOMKilled events",
+      "Width": 800,
+      "Height": 450,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 7,
+      "QuestionId": 6,
+      "AnswerId": null,
+      "Type": "image",
+      "Url": "https://placehold.co/800x350/1a1a2e/00e676?text=Grafana+Memory",
+      "Thumbnail": "https://placehold.co/200x87/1a1a2e/00e676?text=Grafana",
+      "AltText": "Grafana memory spike",
+      "Width": 800,
+      "Height": 350,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 8,
+      "QuestionId": 7,
+      "AnswerId": null,
+      "Type": "image",
+      "Url": "https://placehold.co/900x600/f5f5f0/333333?text=OAuth+PKCE+Flow",
+      "Thumbnail": "https://placehold.co/200x133/f5f5f0/333333?text=PKCE",
+      "AltText": "OAuth PKCE flow diagram",
+      "Width": 900,
+      "Height": 600,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 9,
+      "QuestionId": 8,
+      "AnswerId": null,
+      "Type": "image",
+      "Url": "https://placehold.co/900x400/1a1a1a/00ff88?text=EXPLAIN+ANALYZE",
+      "Thumbnail": "https://placehold.co/200x88/1a1a1a/00ff88?text=Query",
+      "AltText": "EXPLAIN ANALYZE output",
+      "Width": 900,
+      "Height": 400,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 10,
+      "QuestionId": 8,
+      "AnswerId": null,
+      "Type": "video",
+      "Url": "https://youtu.be/example-pg-debug",
+      "Thumbnail": "https://placehold.co/320x180/2d2d2d/ffffff?text=pgAdmin",
+      "AltText": "pgAdmin debug walkthrough",
+      "Width": null,
+      "Height": null,
+      "Duration": "00:04:12",
+      "Platform": "youtube",
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 11,
+      "QuestionId": 9,
+      "AnswerId": null,
+      "Type": "image",
+      "Url": "https://placehold.co/800x350/1e1e1e/ff5555?text=Rust+Compiler+Error",
+      "Thumbnail": "https://placehold.co/200x87/1e1e1e/ff5555?text=Error",
+      "AltText": "Rust lifetime error",
+      "Width": 800,
+      "Height": 350,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 12,
+      "QuestionId": 10,
+      "AnswerId": null,
+      "Type": "image",
+      "Url": "https://placehold.co/1000x600/0a192f/64ffda?text=Collab+Editor+Arch",
+      "Thumbnail": "https://placehold.co/200x120/0a192f/64ffda?text=Arch",
+      "AltText": "Collaborative editor architecture",
+      "Width": 1000,
+      "Height": 600,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 13,
+      "QuestionId": 10,
+      "AnswerId": null,
+      "Type": "video",
+      "Url": "https://vimeo.com/example-collab",
+      "Thumbnail": "https://placehold.co/320x180/1a1a2e/ffffff?text=Prototype",
+      "AltText": "Editor prototype demo",
+      "Width": null,
+      "Height": null,
+      "Duration": "00:05:47",
+      "Platform": "vimeo",
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 14,
+      "QuestionId": 10,
+      "AnswerId": null,
+      "Type": "image",
+      "Url": "https://placehold.co/800x500/0a192f/e6f1ff?text=Data+Flow",
+      "Thumbnail": "https://placehold.co/200x125/0a192f/e6f1ff?text=Flow",
+      "AltText": "Client sync data flow",
+      "Width": 800,
+      "Height": 500,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 15,
+      "QuestionId": 11,
+      "AnswerId": null,
+      "Type": "image",
+      "Url": "https://placehold.co/900x500/2d3436/00b894?text=S3+Upload+Flow",
+      "Thumbnail": "https://placehold.co/200x111/2d3436/00b894?text=S3",
+      "AltText": "FastAPI S3 upload architecture",
+      "Width": 900,
+      "Height": 500,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 16,
+      "QuestionId": 12,
+      "AnswerId": null,
+      "Type": "image",
+      "Url": "https://placehold.co/700x400/ffffff/333333?text=State+Mgmt+Poll",
+      "Thumbnail": "https://placehold.co/200x114/ffffff/333333?text=Poll",
+      "AltText": "State management poll 2026",
+      "Width": 700,
+      "Height": 400,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 17,
+      "QuestionId": null,
+      "AnswerId": 1,
+      "Type": "image",
+      "Url": "https://placehold.co/800x400/0d1117/58a6ff?text=JWT+Rotation+Secure",
+      "Thumbnail": "https://placehold.co/200x100/0d1117/58a6ff?text=JWT",
+      "AltText": "Secure JWT rotation diagram",
+      "Width": 800,
+      "Height": 400,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 18,
+      "QuestionId": null,
+      "AnswerId": 2,
+      "Type": "image",
+      "Url": "https://placehold.co/800x300/0d1117/00e676?text=Fixed+Memory",
+      "Thumbnail": "https://placehold.co/200x75/0d1117/00e676?text=Fixed",
+      "AltText": "Memory profile after fix",
+      "Width": 800,
+      "Height": 300,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 19,
+      "QuestionId": null,
+      "AnswerId": 3,
+      "Type": "image",
+      "Url": "https://placehold.co/800x400/0d1117/58a6ff?text=pgvector+Benchmark",
+      "Thumbnail": "https://placehold.co/200x100/0d1117/58a6ff?text=Bench",
+      "AltText": "pgvector p99 latency benchmark",
+      "Width": 800,
+      "Height": 400,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 20,
+      "QuestionId": null,
+      "AnswerId": 3,
+      "Type": "image",
+      "Url": "https://placehold.co/900x400/0d1117/ffd700?text=HNSW+Performance",
+      "Thumbnail": "https://placehold.co/200x88/0d1117/ffd700?text=HNSW",
+      "AltText": "HNSW index performance",
+      "Width": 900,
+      "Height": 400,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 21,
+      "QuestionId": null,
+      "AnswerId": 4,
+      "Type": "image",
+      "Url": "https://placehold.co/800x350/1a1a2e/ff6b6b?text=Docker+AOT+Build",
+      "Thumbnail": "https://placehold.co/200x87/1a1a2e/ff6b6b?text=Build",
+      "AltText": "Docker AOT compilation output",
+      "Width": 800,
+      "Height": 350,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 22,
+      "QuestionId": null,
+      "AnswerId": 5,
+      "Type": "video",
+      "Url": "https://www.youtube.com/watch?v=virtualer",
+      "Thumbnail": "https://placehold.co/320x180/1a1a2e/00e5ff?text=React+Virtual",
+      "AltText": "React Virtual demo",
+      "Width": null,
+      "Height": null,
+      "Duration": "00:03:45",
+      "Platform": "youtube",
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 23,
+      "QuestionId": null,
+      "AnswerId": 6,
+      "Type": "image",
+      "Url": "https://placehold.co/800x400/1a1a2e/00e676?text=Memory+Streaming",
+      "Thumbnail": "https://placehold.co/200x100/1a1a2e/00e676?text=Stream",
+      "AltText": "Streaming memory profile",
+      "Width": 800,
+      "Height": 400,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 24,
+      "QuestionId": null,
+      "AnswerId": 7,
+      "Type": "image",
+      "Url": "https://placehold.co/900x600/0a192f/64ffda?text=CRDT+Yjs+Diagram",
+      "Thumbnail": "https://placehold.co/200x133/0a192f/64ffda?text=CRDT",
+      "AltText": "CRDT operation flow",
+      "Width": 900,
+      "Height": 600,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 25,
+      "QuestionId": null,
+      "AnswerId": 8,
+      "Type": "image",
+      "Url": "https://placehold.co/800x400/2d3436/00b894?text=Boto3+Upload",
+      "Thumbnail": "https://placehold.co/200x100/2d3436/00b894?text=Boto3",
+      "AltText": "Boto3 S3 multipart upload",
+      "Width": 800,
+      "Height": 400,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 26,
+      "QuestionId": null,
+      "AnswerId": 9,
+      "Type": "image",
+      "Url": "https://placehold.co/800x400/2d3436/00b894?text=Background+Tasks",
+      "Thumbnail": "https://placehold.co/200x100/2d3436/00b894?text=BG",
+      "AltText": "FastAPI background task flow",
+      "Width": 800,
+      "Height": 400,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 27,
+      "QuestionId": null,
+      "AnswerId": 10,
+      "Type": "image",
+      "Url": "https://placehold.co/900x500/2d3436/00b894?text=Presigned+URL",
+      "Thumbnail": "https://placehold.co/200x111/2d3436/00b894?text=PreSign",
+      "AltText": "S3 Presigned URL flow",
+      "Width": 900,
+      "Height": 500,
+      "Duration": null,
+      "Platform": null,
+      "FileSize": null,
+      "MimeType": null,
+      "CreatedAt": "2026-04-02 08:42:36"
+    }
+  ],
+  "Bookmarks": [
+    {
+      "Id": 1,
+      "UserId": 1,
+      "QuestionId": 3,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 2,
+      "UserId": 1,
+      "QuestionId": 10,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 3,
+      "UserId": 2,
+      "QuestionId": 1,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 4,
+      "UserId": 3,
+      "QuestionId": 7,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 5,
+      "UserId": 5,
+      "QuestionId": 8,
+      "CreatedAt": "2026-04-02 08:42:36"
+    },
+    {
+      "Id": 6,
+      "UserId": 7,
+      "QuestionId": 2,
+      "CreatedAt": "2026-04-02 08:42:36"
+    }
+  ],
+  "Notifications": [
+    {
+      "Id": 1,
+      "UserId": 1,
+      "Type": "answer",
+      "Message": "Alex Rivera answered your question about JWT refresh token rotation",
+      "QuestionId": 1,
+      "AnswerId": 1,
+      "IsRead": 1,
+      "CreatedAt": "2026-03-28 12:30:00"
+    },
+    {
+      "Id": 2,
+      "UserId": 1,
+      "Type": "comment",
+      "Message": "Priya Sharma commented on an answer to your question",
+      "QuestionId": 1,
+      "AnswerId": 1,
+      "IsRead": 1,
+      "CreatedAt": "2026-03-28 15:00:00"
+    },
+    {
+      "Id": 3,
+      "UserId": 1,
+      "Type": "vote",
+      "Message": "Your question received 5 new upvotes",
+      "QuestionId": 4,
+      "AnswerId": null,
+      "IsRead": 0,
+      "CreatedAt": "2026-03-29 10:00:00"
+    },
+    {
+      "Id": 4,
+      "UserId": 3,
+      "Type": "badge",
+      "Message": "You earned the 'Popular Question' gold badge",
+      "QuestionId": 10,
+      "AnswerId": null,
+      "IsRead": 0,
+      "CreatedAt": "2026-03-30 06:00:00"
+    },
+    {
+      "Id": 5,
+      "UserId": 2,
+      "Type": "bounty",
+      "Message": "Your answer was awarded a 250 point bounty",
+      "QuestionId": 3,
+      "AnswerId": 3,
+      "IsRead": 1,
+      "CreatedAt": "2026-03-22 16:00:00"
+    },
+    {
+      "Id": 6,
+      "UserId": 7,
+      "Type": "mention",
+      "Message": "Arjun Mehta mentioned you in a comment",
+      "QuestionId": 5,
+      "AnswerId": null,
+      "IsRead": 0,
+      "CreatedAt": "2026-03-31 14:00:00"
+    }
+  ],
+  "LinkedQuestions": [
+    {
+      "QuestionId": 1,
+      "LinkedQuestionId": 3
+    },
+    {
+      "QuestionId": 1,
+      "LinkedQuestionId": 8
+    },
+    {
+      "QuestionId": 2,
+      "LinkedQuestionId": 5
+    },
+    {
+      "QuestionId": 3,
+      "LinkedQuestionId": 1
+    },
+    {
+      "QuestionId": 3,
+      "LinkedQuestionId": 10
+    },
+    {
+      "QuestionId": 7,
+      "LinkedQuestionId": 1
+    },
+    {
+      "QuestionId": 8,
+      "LinkedQuestionId": 1
+    },
+    {
+      "QuestionId": 8,
+      "LinkedQuestionId": 3
+    },
+    {
+      "QuestionId": 10,
+      "LinkedQuestionId": 2
+    },
+    {
+      "QuestionId": 10,
+      "LinkedQuestionId": 3
+    },
+    {
+      "QuestionId": 12,
+      "LinkedQuestionId": 2
+    },
+    {
+      "QuestionId": 12,
+      "LinkedQuestionId": 5
+    }
+  ],
+  "UserTags": [
+    {
+      "UserId": 1,
+      "TagId": 5
+    },
+    {
+      "UserId": 1,
+      "TagId": 4
+    },
+    {
+      "UserId": 1,
+      "TagId": 3
+    },
+    {
+      "UserId": 1,
+      "TagId": 6
+    },
+    {
+      "UserId": 2,
+      "TagId": 2
+    },
+    {
+      "UserId": 2,
+      "TagId": 10
+    },
+    {
+      "UserId": 2,
+      "TagId": 14
+    },
+    {
+      "UserId": 3,
+      "TagId": 1
+    },
+    {
+      "UserId": 3,
+      "TagId": 12
+    },
+    {
+      "UserId": 3,
+      "TagId": 8
+    },
+    {
+      "UserId": 3,
+      "TagId": 7
+    },
+    {
+      "UserId": 4,
+      "TagId": 13
+    },
+    {
+      "UserId": 4,
+      "TagId": 5
+    },
+    {
+      "UserId": 5,
+      "TagId": 9
+    },
+    {
+      "UserId": 5,
+      "TagId": 11
+    },
+    {
+      "UserId": 5,
+      "TagId": 7
+    },
+    {
+      "UserId": 6,
+      "TagId": 6
+    },
+    {
+      "UserId": 6,
+      "TagId": 16
+    },
+    {
+      "UserId": 6,
+      "TagId": 2
+    },
+    {
+      "UserId": 7,
+      "TagId": 3
+    },
+    {
+      "UserId": 7,
+      "TagId": 1
+    },
+    {
+      "UserId": 7,
+      "TagId": 8
+    },
+    {
+      "UserId": 8,
+      "TagId": 15
+    },
+    {
+      "UserId": 8,
+      "TagId": 19
+    },
+    {
+      "UserId": 8,
+      "TagId": 8
+    }
+  ],
+  "SearchSuggestions": [
+    {
+      "Id": 1,
+      "Term": "react useEffect cleanup",
+      "Weight": 15
+    },
+    {
+      "Id": 2,
+      "Term": "jwt refresh token rotation",
+      "Weight": 14
+    },
+    {
+      "Id": 3,
+      "Term": "pgvector performance tuning",
+      "Weight": 13
+    },
+    {
+      "Id": 4,
+      "Term": "docker multi-stage build .net",
+      "Weight": 12
+    },
+    {
+      "Id": 5,
+      "Term": "kubernetes crashloopbackoff",
+      "Weight": 11
+    },
+    {
+      "Id": 6,
+      "Term": "oauth 2.0 pkce react",
+      "Weight": 10
+    },
+    {
+      "Id": 7,
+      "Term": "postgresql jsonb indexing",
+      "Weight": 9
+    },
+    {
+      "Id": 8,
+      "Term": "rust async lifetime tokio",
+      "Weight": 8
+    },
+    {
+      "Id": 9,
+      "Term": "collaborative editor crdt",
+      "Weight": 7
+    },
+    {
+      "Id": 10,
+      "Term": "react state management 2026",
+      "Weight": 6
+    },
+    {
+      "Id": 11,
+      "Term": "fastapi file upload s3",
+      "Weight": 5
+    },
+    {
+      "Id": 12,
+      "Term": "websocket memory leak",
+      "Weight": 4
+    },
+    {
+      "Id": 13,
+      "Term": "dotnet aot compilation",
+      "Weight": 3
+    },
+    {
+      "Id": 14,
+      "Term": "kubernetes memory limits",
+      "Weight": 2
+    },
+    {
+      "Id": 15,
+      "Term": "react virtualization tables",
+      "Weight": 1
+    }
+  ],
+  "QuestionViews": []
+}

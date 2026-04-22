@@ -1,13 +1,33 @@
-/**
- * Question Model - handles question-related database operations
- */
+import {
+  executeNonQuery,
+  executeQuery,
+  executeQueryRows,
+  executeQuerySingle,
+} from "../../db.js";
 
-import { getDb } from "../../db.js";
+const QUESTION_TABLE = "[discussion_forum_Questions]";
+const USER_TABLE = "[discussion_forum_Users]";
+const TAG_TABLE = "[discussion_forum_Tags]";
+const QUESTION_TAG_TABLE = "[discussion_forum_QuestionTags]";
+const QUESTION_VIEW_TABLE = "[discussion_forum_QuestionViews]";
+const ANSWER_TABLE = "[discussion_forum_Answers]";
+const COMMENT_TABLE = "[discussion_forum_Comments]";
+const MEDIA_TABLE = "[discussion_forum_Media]";
+
+const buildInClause = (values, prefix) => {
+  const params = {};
+  const placeholders = values.map((value, index) => {
+    const key = `${prefix}${index}`;
+    params[key] = value;
+    return `@${key}`;
+  });
+
+  return { clause: placeholders.join(", "), params };
+};
 
 export class QuestionModel {
-  static getAll(filters = {}) {
-    const db = getDb();
-    const { page = 1, limit = 15, sort = "created", order = "DESC", status, tag, userId, isBounty, q } = filters;
+  static async getAll(filters = {}) {
+    const { sort = "created", order = "DESC", status, tag, userId, isBounty, q } = filters;
 
     const sortMap = {
       votes: "q.Votes",
@@ -16,178 +36,357 @@ export class QuestionModel {
       activity: "q.LastActivityAt",
       answers: "q.AnswersCount",
     };
+
     const sortCol = sortMap[sort] ?? "q.CreatedAt";
     const sortDir = order?.toUpperCase() === "ASC" ? "ASC" : "DESC";
-
-    let where = "WHERE 1=1";
+    const where = ["1 = 1"];
     const params = {};
 
     if (status) {
-      where += " AND q.Status = @status";
+      where.push("q.[Status] = @status");
       params.status = status;
     }
+
     if (userId) {
-      where += " AND q.UserId = @userId";
-      params.userId = parseInt(userId);
+      where.push("q.UserId = @userId");
+      params.userId = parseInt(userId, 10);
     }
+
     if (isBounty) {
-      where += " AND q.IsBounty = @bounty";
-      params.bounty = isBounty === "true" ? 1 : 0;
+      where.push("q.IsBounty = @isBounty");
+      params.isBounty = isBounty === "true" ? 1 : 0;
     }
+
     if (q) {
-      where += " AND (q.Title LIKE @search OR q.Body LIKE @search)";
+      where.push("(q.Title LIKE @search OR q.Body LIKE @search)");
       params.search = `%${q}%`;
     }
+
     if (tag) {
-      where += ` AND q.Id IN (SELECT qt.QuestionId FROM QuestionTags qt JOIN Tags t ON qt.TagId=t.Id WHERE t.Name=@tag)`;
+      where.push(`q.Id IN (
+        SELECT qt.QuestionId
+        FROM ${QUESTION_TAG_TABLE} qt
+        JOIN ${TAG_TABLE} t ON qt.TagId = t.Id
+        WHERE t.Name = @tag
+      )`);
       params.tag = tag;
     }
 
-    const rows = db
-      .prepare(
-        `SELECT q.*, u.Username, u.DisplayName, u.Avatar, u.Reputation, GROUP_CONCAT(DISTINCT t.Name) AS TagNames FROM Questions q JOIN Users u ON q.UserId=u.Id LEFT JOIN QuestionTags qt ON qt.QuestionId=q.Id LEFT JOIN Tags t ON qt.TagId=t.Id ${where} GROUP BY q.Id ORDER BY ${sortCol} ${sortDir}`
-      )
-      .all(params);
+    const query = `
+      SELECT
+        q.*,
+        u.Username,
+        u.DisplayName,
+        u.Avatar,
+        u.Reputation,
+        taglist.TagNames
+      FROM ${QUESTION_TABLE} q
+      JOIN ${USER_TABLE} u ON q.UserId = u.Id
+      OUTER APPLY (
+        SELECT STRING_AGG(t.Name, ',') AS TagNames
+        FROM ${QUESTION_TAG_TABLE} qt
+        JOIN ${TAG_TABLE} t ON qt.TagId = t.Id
+        WHERE qt.QuestionId = q.Id
+      ) taglist
+      WHERE ${where.join(" AND ")}
+      ORDER BY ${sortCol} ${sortDir}
+    `;
 
-    return rows;
+    return executeQueryRows(query, params);
   }
 
-  static getById(id, userId = null) {
-    const db = getDb();
+  static async getById(id, userId = null) {
+    const question = await executeQuerySingle(
+      `
+      SELECT
+        q.*,
+        u.Username,
+        u.DisplayName,
+        u.Avatar,
+        u.Reputation,
+        u.Bio AS UserBio,
+        taglist.TagNames
+      FROM ${QUESTION_TABLE} q
+      JOIN ${USER_TABLE} u ON q.UserId = u.Id
+      OUTER APPLY (
+        SELECT STRING_AGG(t.Name, ',') AS TagNames
+        FROM ${QUESTION_TAG_TABLE} qt
+        JOIN ${TAG_TABLE} t ON qt.TagId = t.Id
+        WHERE qt.QuestionId = q.Id
+      ) taglist
+      WHERE q.Id = @id
+      `,
+      { id }
+    );
 
-    const q = db
-      .prepare(
-        `SELECT q.*, u.Username, u.DisplayName, u.Avatar, u.Reputation, u.Bio AS UserBio, GROUP_CONCAT(DISTINCT t.Name) AS TagNames FROM Questions q JOIN Users u ON q.UserId=u.Id LEFT JOIN QuestionTags qt ON qt.QuestionId=q.Id LEFT JOIN Tags t ON qt.TagId=t.Id WHERE q.Id=? GROUP BY q.Id`
-      )
-      .get(id);
+    if (!question) {
+      return null;
+    }
 
-    if (!q) return null;
-
-    // Track unique user view if userId provided
     let isNewView = false;
+
     if (userId) {
-      const existingView = db.prepare(`SELECT Id FROM QuestionViews WHERE QuestionId=? AND UserId=?`).get(id, userId);
+      const existingView = await executeQuerySingle(
+        `SELECT Id FROM ${QUESTION_VIEW_TABLE} WHERE QuestionId = @questionId AND UserId = @userId`,
+        { questionId: id, userId }
+      );
+
       if (!existingView) {
-        db.prepare(`INSERT INTO QuestionViews (QuestionId, UserId) VALUES (?, ?)`).run(id, userId);
-        db.prepare(`UPDATE Questions SET Views=Views+1 WHERE Id=?`).run(id);
+        await executeNonQuery(
+          `INSERT INTO ${QUESTION_VIEW_TABLE} (QuestionId, UserId) VALUES (@questionId, @userId)`,
+          { questionId: id, userId }
+        );
+        await executeNonQuery(
+          `UPDATE ${QUESTION_TABLE} SET Views = Views + 1 WHERE Id = @id`,
+          { id }
+        );
+        const updated = await executeQuerySingle(
+          `SELECT Views FROM ${QUESTION_TABLE} WHERE Id = @id`,
+          { id }
+        );
+        question.Views = updated?.Views ?? question.Views;
         isNewView = true;
-        q.Views = db.prepare(`SELECT Views FROM Questions WHERE Id=?`).get(id).Views;
       }
     } else {
-      db.prepare(`UPDATE Questions SET Views=Views+1 WHERE Id=?`).run(id);
-      q.Views = q.Views + 1;
+      await executeNonQuery(
+        `UPDATE ${QUESTION_TABLE} SET Views = Views + 1 WHERE Id = @id`,
+        { id }
+      );
+      question.Views = (question.Views || 0) + 1;
     }
 
-    return { question: q, isNewView, userId: userId ?? "anonymous" };
+    return {
+      question,
+      isNewView,
+      userId: userId ?? "anonymous",
+    };
   }
 
-  static create(title, body, userId, tags = [], isBounty = false, bountyAmount = 0) {
-    const db = getDb();
-    const info = db.prepare(`INSERT INTO Questions (Title,Body,UserId,IsBounty,BountyAmount) VALUES (?,?,?,?,?)`).run(title, body, userId, isBounty ? 1 : 0, bountyAmount);
+  static async create(title, body, userId, tags = [], isBounty = false, bountyAmount = 0) {
+    const result = await executeQuery(
+      `
+      INSERT INTO ${QUESTION_TABLE} (Title, Body, UserId, IsBounty, BountyAmount)
+      OUTPUT INSERTED.Id
+      VALUES (@title, @body, @userId, @isBounty, @bountyAmount)
+      `,
+      {
+        title,
+        body,
+        userId,
+        isBounty: isBounty ? 1 : 0,
+        bountyAmount,
+      }
+    );
 
-    const insQT = db.prepare(`INSERT INTO QuestionTags (QuestionId,TagId) VALUES (?,(SELECT Id FROM Tags WHERE Name=?))`);
-    for (const t of tags) {
-      try {
-        insQT.run(info.lastInsertRowid, t);
-      } catch {}
+    const questionId = result.recordset[0].Id;
+
+    for (const tagName of tags) {
+      await executeNonQuery(
+        `
+        INSERT INTO ${QUESTION_TAG_TABLE} (QuestionId, TagId)
+        SELECT @questionId, Id
+        FROM ${TAG_TABLE}
+        WHERE Name = @tagName
+        `,
+        { questionId, tagName }
+      );
     }
 
-    return { id: info.lastInsertRowid, title, tags };
+    return { id: questionId, title, tags };
   }
 
-  static update(id, title, body, status) {
-    const db = getDb();
-    db.prepare(`UPDATE Questions SET Title=COALESCE(?,Title), Body=COALESCE(?,Body), Status=COALESCE(?,Status), UpdatedAt=datetime('now') WHERE Id=?`).run(title, body, status, id);
-    return db.prepare(`SELECT * FROM Questions WHERE Id=?`).get(id);
+  static async update(id, title, body, status) {
+    const affected = await executeNonQuery(
+      `
+      UPDATE ${QUESTION_TABLE}
+      SET
+        Title = COALESCE(@title, Title),
+        Body = COALESCE(@body, Body),
+        [Status] = COALESCE(@status, [Status]),
+        UpdatedAt = GETUTCDATE()
+      WHERE Id = @id
+      `,
+      { id, title, body, status }
+    );
+
+    if (!affected) {
+      return null;
+    }
+
+    return executeQuerySingle(`SELECT * FROM ${QUESTION_TABLE} WHERE Id = @id`, { id });
   }
 
-  static delete(id) {
-    const db = getDb();
-    db.prepare(`DELETE FROM Questions WHERE Id=?`).run(id);
-    return true;
+  static async delete(id) {
+    const affected = await executeNonQuery(
+      `DELETE FROM ${QUESTION_TABLE} WHERE Id = @id`,
+      { id }
+    );
+
+    return affected > 0;
   }
 
-  static getViews(id, userId = null) {
-    const db = getDb();
-    const q = db.prepare(`SELECT Views FROM Questions WHERE Id=?`).get(id);
-    if (!q) return null;
+  static async getViews(id, userId = null) {
+    const question = await executeQuerySingle(
+      `SELECT Views FROM ${QUESTION_TABLE} WHERE Id = @id`,
+      { id }
+    );
+
+    if (!question) {
+      return null;
+    }
 
     if (userId) {
-      const existingView = db.prepare(`SELECT Id FROM QuestionViews WHERE QuestionId=? AND UserId=?`).get(id, userId);
+      const existingView = await executeQuerySingle(
+        `SELECT Id FROM ${QUESTION_VIEW_TABLE} WHERE QuestionId = @questionId AND UserId = @userId`,
+        { questionId: id, userId }
+      );
+
       if (!existingView) {
-        db.prepare(`INSERT INTO QuestionViews (QuestionId, UserId) VALUES (?, ?)`).run(id, userId);
-        db.prepare(`UPDATE Questions SET Views=Views+1 WHERE Id=?`).run(id);
-        const updated = db.prepare(`SELECT Views FROM Questions WHERE Id=?`).get(id);
-        return { views: updated.Views, isNewView: true, userId };
-      } else {
-        return { views: q.Views, isNewView: false, userId };
+        await executeNonQuery(
+          `INSERT INTO ${QUESTION_VIEW_TABLE} (QuestionId, UserId) VALUES (@questionId, @userId)`,
+          { questionId: id, userId }
+        );
+        await executeNonQuery(
+          `UPDATE ${QUESTION_TABLE} SET Views = Views + 1 WHERE Id = @id`,
+          { id }
+        );
+        const updated = await executeQuerySingle(
+          `SELECT Views FROM ${QUESTION_TABLE} WHERE Id = @id`,
+          { id }
+        );
+
+        return { views: updated?.Views ?? question.Views, isNewView: true, userId };
       }
+
+      return { views: question.Views, isNewView: false, userId };
     }
 
-    return { views: q.Views, isNewView: null, message: "Provide userId query param to track unique views" };
+    return {
+      views: question.Views,
+      isNewView: null,
+      message: "Provide userId query param to track unique views",
+    };
   }
 
-  static getViewers(id) {
-    const db = getDb();
-    const viewers = db
-      .prepare(`SELECT u.Id, u.Username, u.DisplayName, u.Avatar, u.Reputation, qv.ViewedAt FROM QuestionViews qv JOIN Users u ON qv.UserId=u.Id WHERE qv.QuestionId=? ORDER BY qv.ViewedAt DESC`)
-      .all(id);
+  static async getViewers(id) {
+    const viewers = await executeQueryRows(
+      `
+      SELECT
+        u.Id,
+        u.Username,
+        u.DisplayName,
+        u.Avatar,
+        u.Reputation,
+        qv.ViewedAt
+      FROM ${QUESTION_VIEW_TABLE} qv
+      JOIN ${USER_TABLE} u ON qv.UserId = u.Id
+      WHERE qv.QuestionId = @id
+      ORDER BY qv.ViewedAt DESC
+      `,
+      { id }
+    );
 
-    const viewCount = db.prepare(`SELECT Views FROM Questions WHERE Id=?`).get(id);
+    const viewCount = await executeQuerySingle(
+      `SELECT Views FROM ${QUESTION_TABLE} WHERE Id = @id`,
+      { id }
+    );
+
     return {
-      totalViews: viewCount.Views,
+      totalViews: viewCount?.Views ?? 0,
       uniqueViewers: viewers.length,
-      viewers: viewers.map((v) => ({
-        userId: v.Id,
-        username: v.Username,
-        displayName: v.DisplayName,
-        avatar: v.Avatar,
-        reputation: v.Reputation,
-        viewedAt: v.ViewedAt,
+      viewers: viewers.map((viewer) => ({
+        userId: viewer.Id,
+        username: viewer.Username,
+        displayName: viewer.DisplayName,
+        avatar: viewer.Avatar,
+        reputation: viewer.Reputation,
+        viewedAt: viewer.ViewedAt,
       })),
     };
   }
 
-  static getReplies(id, sort = "votes", order = "DESC") {
-    const db = getDb();
+  static async getReplies(id, sort = "votes", order = "DESC") {
     const sortCol = sort === "created" ? "a.CreatedAt" : "a.Votes";
-    const rows = db
-      .prepare(`SELECT a.*, u.Username, u.DisplayName, u.Avatar, u.Reputation FROM Answers a JOIN Users u ON a.UserId=u.Id WHERE a.QuestionId=? ORDER BY a.IsAccepted DESC, ${sortCol} ${order?.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
-      .all(id);
+    const sortDir = order?.toUpperCase() === "ASC" ? "ASC" : "DESC";
+    const rows = await executeQueryRows(
+      `
+      SELECT
+        a.*,
+        u.Username,
+        u.DisplayName,
+        u.Avatar,
+        u.Reputation
+      FROM ${ANSWER_TABLE} a
+      JOIN ${USER_TABLE} u ON a.UserId = u.Id
+      WHERE a.QuestionId = @questionId
+      ORDER BY a.IsAccepted DESC, ${sortCol} ${sortDir}
+      `,
+      { questionId: id }
+    );
 
-    const aids = rows.map((a) => a.Id);
-    let cMap = {},
-      mMap = {};
-    if (aids.length > 0) {
-      const ph = aids.map(() => "?").join(",");
-      for (const c of db
-        .prepare(
-          `SELECT c.*, u.Username, u.DisplayName, u.Avatar FROM Comments c JOIN Users u ON c.UserId=u.Id WHERE c.AnswerId IN (${ph}) ORDER BY c.CreatedAt`
-        )
-        .all(...aids)) {
-        if (!cMap[c.AnswerId]) cMap[c.AnswerId] = [];
-        cMap[c.AnswerId].push(c);
+    if (rows.length === 0) {
+      return { count: 0, replies: [] };
+    }
+
+    const answerIds = rows.map((row) => row.Id);
+    const commentParams = buildInClause(answerIds, "answerId");
+    const comments = await executeQueryRows(
+      `
+      SELECT
+        c.*,
+        u.Username,
+        u.DisplayName,
+        u.Avatar
+      FROM ${COMMENT_TABLE} c
+      JOIN ${USER_TABLE} u ON c.UserId = u.Id
+      WHERE c.AnswerId IN (${commentParams.clause})
+      ORDER BY c.CreatedAt
+      `,
+      commentParams.params
+    );
+    const media = await executeQueryRows(
+      `SELECT * FROM ${MEDIA_TABLE} WHERE AnswerId IN (${commentParams.clause})`,
+      commentParams.params
+    );
+
+    const commentMap = {};
+    const mediaMap = {};
+
+    for (const comment of comments) {
+      if (!commentMap[comment.AnswerId]) {
+        commentMap[comment.AnswerId] = [];
       }
-      for (const m of db.prepare(`SELECT * FROM Media WHERE AnswerId IN (${ph})`).all(...aids)) {
-        if (!mMap[m.AnswerId]) mMap[m.AnswerId] = [];
-        mMap[m.AnswerId].push(m);
+
+      commentMap[comment.AnswerId].push(comment);
+    }
+
+    for (const item of media) {
+      if (!mediaMap[item.AnswerId]) {
+        mediaMap[item.AnswerId] = [];
       }
+
+      mediaMap[item.AnswerId].push(item);
     }
 
     return {
       count: rows.length,
-      replies: rows.map((a) => ({
-        id: a.Id,
-        questionId: a.QuestionId,
-        userId: a.UserId,
-        body: a.Body,
-        votes: a.Votes,
-        isAccepted: !!a.IsAccepted,
-        createdAt: a.CreatedAt,
-        updatedAt: a.UpdatedAt,
-        comments: cMap[a.Id] ?? [],
-        media: mMap[a.Id] ?? [],
-        user: { username: a.Username, displayName: a.DisplayName, avatar: a.Avatar, reputation: a.Reputation },
+      replies: rows.map((answer) => ({
+        id: answer.Id,
+        questionId: answer.QuestionId,
+        userId: answer.UserId,
+        body: answer.Body,
+        votes: answer.Votes,
+        isAccepted: !!answer.IsAccepted,
+        createdAt: answer.CreatedAt,
+        updatedAt: answer.UpdatedAt,
+        comments: commentMap[answer.Id] ?? [],
+        media: mediaMap[answer.Id] ?? [],
+        user: {
+          username: answer.Username,
+          displayName: answer.DisplayName,
+          avatar: answer.Avatar,
+          reputation: answer.Reputation,
+        },
       })),
     };
   }

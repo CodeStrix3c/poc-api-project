@@ -1,31 +1,91 @@
-/**
- * Other Controllers - for votes, bookmarks, media, search, stats
- */
-
-import { ok, created, notFound, serverError, badRequest, conflict } from "../utils/responseHandler.js";
+import {
+  executeNonQuery,
+  executeQuery,
+  executeQueryRows,
+  executeQuerySingle,
+} from "../../db.js";
+import {
+  ok,
+  created,
+  notFound,
+  serverError,
+  badRequest,
+  conflict,
+} from "../utils/responseHandler.js";
 import { paginate } from "../utils/pagination.js";
-import { getDb } from "../../db.js";
 import { UserModel, TagModel, SearchModel, StatsModel } from "../models/index.js";
 
+const QUESTION_TABLE = "[discussion_forum_Questions]";
+const ANSWER_TABLE = "[discussion_forum_Answers]";
+const COMMENT_TABLE = "[discussion_forum_Comments]";
+const VOTE_TABLE = "[discussion_forum_Votes]";
+const BOOKMARK_TABLE = "[discussion_forum_Bookmarks]";
+const MEDIA_TABLE = "[discussion_forum_Media]";
+const NOTIFICATION_TABLE = "[discussion_forum_Notifications]";
+
 export class VoteController {
-  static cast(req, res) {
+  static async cast(req, res) {
     try {
-      const db = getDb();
       const { userId, targetType, targetId, value } = req.body;
 
       if (!userId || !targetType || !targetId || ![1, -1].includes(value)) {
-        return badRequest(res, "userId, targetType, targetId, and value (1 or -1) required");
+        return badRequest(
+          res,
+          "userId, targetType, targetId, and value (1 or -1) required"
+        );
+      }
+
+      const tableMap = {
+        question: QUESTION_TABLE,
+        answer: ANSWER_TABLE,
+        comment: COMMENT_TABLE,
+      };
+      const table = tableMap[targetType];
+
+      if (!table) {
+        return badRequest(res, "targetType must be question, answer, or comment");
       }
 
       try {
-        const table = targetType === "question" ? "Questions" : targetType === "answer" ? "Answers" : "Comments";
-        const info = db.prepare(`INSERT INTO Votes (UserId,TargetType,TargetId,Value) VALUES (?,?,?,?)`).run(userId, targetType, targetId, value);
-        db.prepare(`UPDATE ${table} SET Votes=Votes+? WHERE Id=?`).run(value, targetId);
-        return created(res, { voteId: info.lastInsertRowid, userId, targetType, targetId, value });
+        const result = await executeQuery(
+          `
+          INSERT INTO ${VOTE_TABLE} (UserId, TargetType, TargetId, Value)
+          OUTPUT INSERTED.Id
+          VALUES (@userId, @targetType, @targetId, @value)
+          `,
+          { userId, targetType, targetId, value }
+        );
+        const total = await executeQuerySingle(
+          `
+          SELECT COALESCE(SUM(Value), 0) AS Total
+          FROM ${VOTE_TABLE}
+          WHERE TargetType = @targetType AND TargetId = @targetId
+          `,
+          { targetType, targetId }
+        );
+
+        await executeNonQuery(
+          `UPDATE ${table} SET Votes = @votes WHERE Id = @targetId`,
+          { votes: total?.Total ?? 0, targetId }
+        );
+
+        return created(res, {
+          voteId: result.recordset[0].Id,
+          userId,
+          targetType,
+          targetId,
+          value,
+        });
       } catch (err) {
-        if (err.message.includes("UNIQUE")) {
+        if (
+          err.number === 2627 ||
+          err.number === 2601 ||
+          err.message.includes("UNIQUE") ||
+          err.message.includes("duplicate key")
+        ) {
           return conflict(res, "Already voted");
         }
+
         throw err;
       }
     } catch (err) {
@@ -35,32 +95,56 @@ export class VoteController {
 }
 
 export class BookmarkController {
-  static get(req, res) {
+  static async get(req, res) {
     try {
-      const db = getDb();
-      const userId = parseInt(req.params.userId);
-      const bookmarks = db
-        .prepare(`SELECT b.*, q.Title, q.Votes, q.AnswersCount, q.Status FROM Bookmarks b JOIN Questions q ON b.QuestionId=q.Id WHERE b.UserId=? ORDER BY b.CreatedAt DESC`)
-        .all(userId);
+      const userId = parseInt(req.params.userId, 10);
+      const bookmarks = await executeQueryRows(
+        `
+        SELECT
+          b.*,
+          q.Title,
+          q.Votes,
+          q.AnswersCount,
+          q.[Status]
+        FROM ${BOOKMARK_TABLE} b
+        JOIN ${QUESTION_TABLE} q ON b.QuestionId = q.Id
+        WHERE b.UserId = @userId
+        ORDER BY b.CreatedAt DESC
+        `,
+        { userId }
+      );
+
       return ok(res, bookmarks);
     } catch (err) {
       return serverError(res, err);
     }
   }
 
-  static add(req, res) {
+  static async add(req, res) {
     try {
-      const db = getDb();
       const { userId, questionId } = req.body;
 
       try {
-        db.prepare(`INSERT INTO Bookmarks (UserId,QuestionId) VALUES (?,?)`).run(userId, questionId);
-        db.prepare(`UPDATE Questions SET Favorites=Favorites+1 WHERE Id=?`).run(questionId);
+        await executeNonQuery(
+          `INSERT INTO ${BOOKMARK_TABLE} (UserId, QuestionId) VALUES (@userId, @questionId)`,
+          { userId, questionId }
+        );
+        await executeNonQuery(
+          `UPDATE ${QUESTION_TABLE} SET Favorites = Favorites + 1 WHERE Id = @questionId`,
+          { questionId }
+        );
+
         return created(res, { userId, questionId });
       } catch (err) {
-        if (err.message.includes("UNIQUE")) {
+        if (
+          err.number === 2627 ||
+          err.number === 2601 ||
+          err.message.includes("UNIQUE") ||
+          err.message.includes("duplicate key")
+        ) {
           return conflict(res, "Already bookmarked");
         }
+
         throw err;
       }
     } catch (err) {
@@ -68,14 +152,24 @@ export class BookmarkController {
     }
   }
 
-  static remove(req, res) {
+  static async remove(req, res) {
     try {
-      const db = getDb();
-      const uid = parseInt(req.params.userId);
-      const qid = parseInt(req.params.questionId);
+      const userId = parseInt(req.params.userId, 10);
+      const questionId = parseInt(req.params.questionId, 10);
 
-      db.prepare(`DELETE FROM Bookmarks WHERE UserId=? AND QuestionId=?`).run(uid, qid);
-      db.prepare(`UPDATE Questions SET Favorites=MAX(Favorites-1,0) WHERE Id=?`).run(qid);
+      await executeNonQuery(
+        `DELETE FROM ${BOOKMARK_TABLE} WHERE UserId = @userId AND QuestionId = @questionId`,
+        { userId, questionId }
+      );
+      await executeNonQuery(
+        `
+        UPDATE ${QUESTION_TABLE}
+        SET Favorites = CASE WHEN Favorites > 0 THEN Favorites - 1 ELSE 0 END
+        WHERE Id = @questionId
+        `,
+        { questionId }
+      );
+
       res.status(204).send();
     } catch (err) {
       return serverError(res, err);
@@ -84,19 +178,44 @@ export class BookmarkController {
 }
 
 export class MediaController {
-  static upload(req, res) {
+  static async upload(req, res) {
     try {
-      const db = getDb();
-      const { questionId, answerId, type, url, thumbnail, altText, width, height, duration, platform } = req.body;
+      const {
+        questionId,
+        answerId,
+        type,
+        url,
+        thumbnail,
+        altText,
+        width,
+        height,
+        duration,
+        platform,
+      } = req.body;
 
-      const info = db
-        .prepare(
-          `INSERT INTO Media (QuestionId,AnswerId,Type,Url,Thumbnail,AltText,Width,Height,Duration,Platform) VALUES (?,?,?,?,?,?,?,?,?,?)`
-        )
-        .run(questionId ?? null, answerId ?? null, type, url, thumbnail ?? "", altText ?? "", width ?? null, height ?? null, duration ?? null, platform ?? null);
+      const result = await executeQuery(
+        `
+        INSERT INTO ${MEDIA_TABLE}
+          (QuestionId, AnswerId, Type, Url, Thumbnail, AltText, Width, Height, Duration, Platform)
+        OUTPUT INSERTED.*
+        VALUES
+          (@questionId, @answerId, @type, @url, @thumbnail, @altText, @width, @height, @duration, @platform)
+        `,
+        {
+          questionId: questionId ?? null,
+          answerId: answerId ?? null,
+          type,
+          url,
+          thumbnail: thumbnail ?? "",
+          altText: altText ?? "",
+          width: width ?? null,
+          height: height ?? null,
+          duration: duration ?? null,
+          platform: platform ?? null,
+        }
+      );
 
-      const media = db.prepare(`SELECT * FROM Media WHERE Id=?`).get(info.lastInsertRowid);
-      return created(res, media);
+      return created(res, result.recordset[0]);
     } catch (err) {
       return serverError(res, err);
     }
@@ -104,22 +223,22 @@ export class MediaController {
 }
 
 export class SearchController {
-  static search(req, res) {
+  static async search(req, res) {
     try {
-      const db = getDb();
       const { q, page = 1, limit = 15 } = req.query;
 
       if (!q) {
-        const suggestions = SearchModel.search("");
+        const suggestions = await SearchModel.search("");
         return ok(res, suggestions);
       }
 
-      const rows = SearchModel.search(q);
+      const rows = await SearchModel.search(q);
       const paged = paginate(
-        rows.map((r) => ({ ...r, tags: r.TN ? r.TN.split(",") : [] })),
-        parseInt(page),
-        parseInt(limit)
+        rows.map((row) => ({ ...row, tags: row.TN ? row.TN.split(",") : [] })),
+        parseInt(page, 10),
+        parseInt(limit, 10)
       );
+
       return res.json({ ...paged, timestamp: new Date().toISOString() });
     } catch (err) {
       return serverError(res, err);
@@ -128,22 +247,30 @@ export class SearchController {
 }
 
 export class UserController {
-  static getAll(req, res) {
+  static async getAll(req, res) {
     try {
-      const users = UserModel.getAll(req.query);
-      const paged = paginate(users, parseInt(req.query.page) || 1, parseInt(req.query.limit) || 15);
+      const users = await UserModel.getAll(req.query);
+      const paged = paginate(
+        users,
+        parseInt(req.query.page, 10) || 1,
+        parseInt(req.query.limit, 10) || 15
+      );
+
       return res.json({ ...paged, timestamp: new Date().toISOString() });
     } catch (err) {
       return serverError(res, err);
     }
   }
 
-  static getById(req, res) {
+  static async getById(req, res) {
     try {
-      const id = parseInt(req.params.id);
-      const user = UserModel.getById(id);
+      const id = parseInt(req.params.id, 10);
+      const user = await UserModel.getById(id);
 
-      if (!user) return notFound(res);
+      if (!user) {
+        return notFound(res);
+      }
+
       return ok(res, user);
     } catch (err) {
       return serverError(res, err);
@@ -152,9 +279,9 @@ export class UserController {
 }
 
 export class TagController {
-  static getAll(req, res) {
+  static async getAll(req, res) {
     try {
-      const tags = TagModel.getAll(req.query.q);
+      const tags = await TagModel.getAll(req.query.q);
       const paged = paginate(tags, 1, 50);
       return res.json({ ...paged, timestamp: new Date().toISOString() });
     } catch (err) {
@@ -164,22 +291,33 @@ export class TagController {
 }
 
 export class NotificationController {
-  static get(req, res) {
+  static async get(req, res) {
     try {
-      const db = getDb();
-      const userId = parseInt(req.params.userId);
-      const notifications = db.prepare(`SELECT * FROM Notifications WHERE UserId=? ORDER BY CreatedAt DESC`).all(userId);
+      const userId = parseInt(req.params.userId, 10);
+      const notifications = await executeQueryRows(
+        `
+        SELECT *
+        FROM ${NOTIFICATION_TABLE}
+        WHERE UserId = @userId
+        ORDER BY CreatedAt DESC
+        `,
+        { userId }
+      );
+
       return ok(res, notifications);
     } catch (err) {
       return serverError(res, err);
     }
   }
 
-  static markAsRead(req, res) {
+  static async markAsRead(req, res) {
     try {
-      const db = getDb();
-      const id = parseInt(req.params.id);
-      db.prepare(`UPDATE Notifications SET IsRead=1 WHERE Id=?`).run(id);
+      const id = parseInt(req.params.id, 10);
+      await executeNonQuery(
+        `UPDATE ${NOTIFICATION_TABLE} SET IsRead = 1 WHERE Id = @id`,
+        { id }
+      );
+
       return ok(res, { message: "Read" });
     } catch (err) {
       return serverError(res, err);
@@ -188,18 +326,18 @@ export class NotificationController {
 }
 
 export class StatsController {
-  static getStats(req, res) {
+  static async getStats(req, res) {
     try {
-      const stats = StatsModel.getStats();
+      const stats = await StatsModel.getStats();
       return ok(res, stats);
     } catch (err) {
       return serverError(res, err);
     }
   }
 
-  static healthCheck(req, res) {
+  static async healthCheck(req, res) {
     try {
-      const health = StatsModel.healthCheck();
+      const health = await StatsModel.healthCheck();
       return res.json(health);
     } catch (err) {
       return res.status(503).json({ status: "unhealthy", error: err.message });

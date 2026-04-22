@@ -1,20 +1,30 @@
 {
   "name": "discussion-forum-mock-api",
   "version": "1.0.0",
-  "description": "Stack Overflow-like mock API with SQLite — zero config, no Docker needed",
+  "description": "Stack Overflow-like mock API with SQL Server support",
   "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
+    "build": "npm run build:swagger && node build-azure-package.js",
+    "build:production": "npm run build",
+    "start": "node server-refactored.js",
+    "dev": "node --watch server-refactored.js",
     "seed": "node seed.js",
     "reset": "node seed.js --reset",
-    "build:swagger": "node generate-swagger.js"
+    "build:swagger": "node generate-swagger.js",
+    "generate:sqlserver-inserts": "node generate-sqlserver-inserts.js"
   },
   "dependencies": {
-    "better-sqlite3": "^11.7.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
     "express": "^4.21.0",
+    "mssql": "^12.3.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "optionalDependencies": {
+    "msnodesqlv8": "^5.1.9"
   }
 }

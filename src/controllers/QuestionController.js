@@ -1,144 +1,252 @@
-/**
- * Questions Controller - handles question-related requests
- */
-
 import { QuestionModel } from "../models/QuestionModel.js";
-import { ok, created, notFound, serverError, badRequest } from "../utils/responseHandler.js";
+import {
+  executeQueryRows,
+  executeQuerySingle,
+} from "../../db.js";
+import {
+  ok,
+  created,
+  notFound,
+  serverError,
+  badRequest,
+} from "../utils/responseHandler.js";
 import { paginate } from "../utils/pagination.js";
 
-export class QuestionController {
-  static getAll(req, res) {
-    try {
-      const rows = QuestionModel.getAll(req.query);
-      const qIds = rows.map((r) => r.Id);
+const QUESTION_TABLE = "[discussion_forum_Questions]";
+const MEDIA_TABLE = "[discussion_forum_Media]";
+const COMMENT_TABLE = "[discussion_forum_Comments]";
+const USER_TABLE = "[discussion_forum_Users]";
+const LINKED_QUESTION_TABLE = "[discussion_forum_LinkedQuestions]";
 
-      // Get media for questions
+const buildInClause = (values, prefix) => {
+  const params = {};
+  const placeholders = values.map((value, index) => {
+    const key = `${prefix}${index}`;
+    params[key] = value;
+    return `@${key}`;
+  });
+
+  return { clause: placeholders.join(", "), params };
+};
+
+export class QuestionController {
+  static async getAll(req, res) {
+    try {
+      const rows = await QuestionModel.getAll(req.query);
+      const qIds = rows.map((row) => row.Id);
       let mediaMap = {};
+
       if (qIds.length > 0) {
-        const { getDb } = await import("../../db.js");
-        const db = getDb();
-        for (const m of db.prepare(`SELECT * FROM Media WHERE QuestionId IN (${qIds.join(",")})`).all()) {
-          if (!mediaMap[m.QuestionId]) mediaMap[m.QuestionId] = [];
-          mediaMap[m.QuestionId].push(m);
-        }
+        const inClause = buildInClause(qIds, "questionId");
+        const mediaRows = await executeQueryRows(
+          `SELECT * FROM ${MEDIA_TABLE} WHERE QuestionId IN (${inClause.clause})`,
+          inClause.params
+        );
+
+        mediaMap = mediaRows.reduce((accumulator, media) => {
+          if (!accumulator[media.QuestionId]) {
+            accumulator[media.QuestionId] = [];
+          }
+
+          accumulator[media.QuestionId].push(media);
+          return accumulator;
+        }, {});
       }
 
-      const mapped = rows.map((r) => ({
-        id: r.Id,
-        title: r.Title,
-        body: r.Body,
-        userId: r.UserId,
-        votes: r.Votes,
-        views: r.Views,
-        answersCount: r.AnswersCount,
-        acceptedAnswerId: r.AcceptedAnswerId,
-        status: r.Status,
-        isBounty: !!r.IsBounty,
-        bountyAmount: r.BountyAmount,
-        favorites: r.Favorites,
-        isProtected: !!r.IsProtected,
-        createdAt: r.CreatedAt,
-        updatedAt: r.UpdatedAt,
-        lastActivityAt: r.LastActivityAt,
-        tags: r.TagNames ? r.TagNames.split(",") : [],
-        media: mediaMap[r.Id] ?? [],
-        user: { username: r.Username, displayName: r.DisplayName, avatar: r.Avatar, reputation: r.Reputation },
+      const mapped = rows.map((row) => ({
+        id: row.Id,
+        title: row.Title,
+        body: row.Body,
+        userId: row.UserId,
+        votes: row.Votes,
+        views: row.Views,
+        answersCount: row.AnswersCount,
+        acceptedAnswerId: row.AcceptedAnswerId,
+        status: row.Status,
+        isBounty: !!row.IsBounty,
+        bountyAmount: row.BountyAmount,
+        favorites: row.Favorites,
+        isProtected: !!row.IsProtected,
+        createdAt: row.CreatedAt,
+        updatedAt: row.UpdatedAt,
+        lastActivityAt: row.LastActivityAt,
+        tags: row.TagNames ? row.TagNames.split(",") : [],
+        media: mediaMap[row.Id] ?? [],
+        user: {
+          username: row.Username,
+          displayName: row.DisplayName,
+          avatar: row.Avatar,
+          reputation: row.Reputation,
+        },
       }));
 
-      const paged = paginate(mapped, parseInt(req.query.page) || 1, parseInt(req.query.limit) || 15);
+      const paged = paginate(
+        mapped,
+        parseInt(req.query.page, 10) || 1,
+        parseInt(req.query.limit, 10) || 15
+      );
+
       return res.json({ ...paged, timestamp: new Date().toISOString() });
     } catch (err) {
       return serverError(res, err);
     }
   }
 
-  static getById(req, res) {
+  static async getById(req, res) {
     try {
-      const id = parseInt(req.params.id);
-      const userId = req.query.userId ? parseInt(req.query.userId) : null;
+      const id = parseInt(req.params.id, 10);
+      const userId = req.query.userId ? parseInt(req.query.userId, 10) : null;
+      const result = await QuestionModel.getById(id, userId);
 
-      const result = QuestionModel.getById(id, userId);
-      if (!result) return notFound(res, "Question not found");
+      if (!result) {
+        return notFound(res, "Question not found");
+      }
 
-      const q = result.question;
-      const { getDb } = await import("../../db.js");
-      const db = getDb();
+      const media = await executeQueryRows(
+        `SELECT * FROM ${MEDIA_TABLE} WHERE QuestionId = @id`,
+        { id }
+      );
+      const comments = await executeQueryRows(
+        `
+        SELECT
+          c.*,
+          u.Username,
+          u.DisplayName,
+          u.Avatar
+        FROM ${COMMENT_TABLE} c
+        JOIN ${USER_TABLE} u ON c.UserId = u.Id
+        WHERE c.QuestionId = @id
+        ORDER BY c.CreatedAt
+        `,
+        { id }
+      );
+      const linked = await executeQueryRows(
+        `
+        SELECT
+          lq.LinkedQuestionId,
+          q2.Title,
+          q2.Votes,
+          q2.AnswersCount
+        FROM ${LINKED_QUESTION_TABLE} lq
+        JOIN ${QUESTION_TABLE} q2 ON lq.LinkedQuestionId = q2.Id
+        WHERE lq.QuestionId = @id
+        `,
+        { id }
+      );
 
-      const media = db.prepare(`SELECT * FROM Media WHERE QuestionId=?`).all(id);
-      const comments = db.prepare(`SELECT c.*, u.Username, u.DisplayName, u.Avatar FROM Comments c JOIN Users u ON c.UserId=u.Id WHERE c.QuestionId=? ORDER BY c.CreatedAt`).all(id);
-      const linked = db
-        .prepare(`SELECT lq.LinkedQuestionId, q2.Title, q2.Votes, q2.AnswersCount FROM LinkedQuestions lq JOIN Questions q2 ON lq.LinkedQuestionId=q2.Id WHERE lq.QuestionId=?`)
-        .all(id);
+      const question = result.question;
 
       return ok(res, {
-        id: q.Id,
-        title: q.Title,
-        body: q.Body,
-        userId: q.UserId,
-        votes: q.Votes,
-        views: q.Views,
-        answersCount: q.AnswersCount,
-        acceptedAnswerId: q.AcceptedAnswerId,
-        status: q.Status,
-        isBounty: !!q.IsBounty,
-        bountyAmount: q.BountyAmount,
-        favorites: q.Favorites,
-        isProtected: !!q.IsProtected,
-        createdAt: q.CreatedAt,
-        updatedAt: q.UpdatedAt,
-        lastActivityAt: q.LastActivityAt,
-        tags: q.TagNames ? q.TagNames.split(",") : [],
+        id: question.Id,
+        title: question.Title,
+        body: question.Body,
+        userId: question.UserId,
+        votes: question.Votes,
+        views: question.Views,
+        answersCount: question.AnswersCount,
+        acceptedAnswerId: question.AcceptedAnswerId,
+        status: question.Status,
+        isBounty: !!question.IsBounty,
+        bountyAmount: question.BountyAmount,
+        favorites: question.Favorites,
+        isProtected: !!question.IsProtected,
+        createdAt: question.CreatedAt,
+        updatedAt: question.UpdatedAt,
+        lastActivityAt: question.LastActivityAt,
+        tags: question.TagNames ? question.TagNames.split(",") : [],
         media,
         comments,
         linkedQuestions: linked,
-        user: { username: q.Username, displayName: q.DisplayName, avatar: q.Avatar, reputation: q.Reputation, bio: q.UserBio },
-        viewTrackingInfo: { isNewView: result.isNewView, userId: result.userId },
+        user: {
+          username: question.Username,
+          displayName: question.DisplayName,
+          avatar: question.Avatar,
+          reputation: question.Reputation,
+          bio: question.UserBio,
+        },
+        viewTrackingInfo: {
+          isNewView: result.isNewView,
+          userId: result.userId,
+        },
       });
     } catch (err) {
       return serverError(res, err);
     }
   }
 
-  static create(req, res) {
+  static async create(req, res) {
     try {
-      const { title, body, userId, tags = [], isBounty = false, bountyAmount = 0 } = req.body;
-      if (!title || !body || !userId) return badRequest(res, "title, body, userId required");
+      const {
+        title,
+        body,
+        userId,
+        tags = [],
+        isBounty = false,
+        bountyAmount = 0,
+      } = req.body;
 
-      const result = QuestionModel.create(title, body, userId, tags, isBounty, bountyAmount);
+      if (!title || !body || !userId) {
+        return badRequest(res, "title, body, userId required");
+      }
+
+      const result = await QuestionModel.create(
+        title,
+        body,
+        userId,
+        tags,
+        isBounty,
+        bountyAmount
+      );
+
       return created(res, result);
     } catch (err) {
       return serverError(res, err);
     }
   }
 
-  static update(req, res) {
+  static async update(req, res) {
     try {
       const { title, body, status } = req.body;
-      const updated = QuestionModel.update(parseInt(req.params.id), title, body, status);
+      const updated = await QuestionModel.update(
+        parseInt(req.params.id, 10),
+        title,
+        body,
+        status
+      );
 
-      if (!updated) return notFound(res);
+      if (!updated) {
+        return notFound(res);
+      }
+
       return ok(res, updated);
     } catch (err) {
       return serverError(res, err);
     }
   }
 
-  static delete(req, res) {
+  static async delete(req, res) {
     try {
-      QuestionModel.delete(parseInt(req.params.id));
+      const deleted = await QuestionModel.delete(parseInt(req.params.id, 10));
+
+      if (!deleted) {
+        return notFound(res);
+      }
+
       res.status(204).send();
     } catch (err) {
       return serverError(res, err);
     }
   }
 
-  static getViews(req, res) {
+  static async getViews(req, res) {
     try {
-      const id = parseInt(req.params.id);
-      const userId = req.query.userId ? parseInt(req.query.userId) : null;
+      const id = parseInt(req.params.id, 10);
+      const userId = req.query.userId ? parseInt(req.query.userId, 10) : null;
+      const result = await QuestionModel.getViews(id, userId);
 
-      const result = QuestionModel.getViews(id, userId);
-      if (!result) return notFound(res, "Question not found");
+      if (!result) {
+        return notFound(res, "Question not found");
+      }
 
       return ok(res, result);
     } catch (err) {
@@ -146,35 +254,40 @@ export class QuestionController {
     }
   }
 
-  static getViewers(req, res) {
+  static async getViewers(req, res) {
     try {
-      const id = parseInt(req.params.id);
-      const { getDb } = await import("../../db.js");
-      const db = getDb();
+      const id = parseInt(req.params.id, 10);
+      const question = await executeQuerySingle(
+        `SELECT Id FROM ${QUESTION_TABLE} WHERE Id = @id`,
+        { id }
+      );
 
-      const q = db.prepare(`SELECT Id FROM Questions WHERE Id=?`).get(id);
-      if (!q) return notFound(res, "Question not found");
+      if (!question) {
+        return notFound(res, "Question not found");
+      }
 
-      const result = QuestionModel.getViewers(id);
+      const result = await QuestionModel.getViewers(id);
       return ok(res, { questionId: id, ...result });
     } catch (err) {
       return serverError(res, err);
     }
   }
 
-  static getReplies(req, res) {
+  static async getReplies(req, res) {
     try {
-      const qId = parseInt(req.params.id);
+      const id = parseInt(req.params.id, 10);
       const { sort = "votes", order = "DESC" } = req.query;
+      const question = await executeQuerySingle(
+        `SELECT Id FROM ${QUESTION_TABLE} WHERE Id = @id`,
+        { id }
+      );
 
-      const { getDb } = await import("../../db.js");
-      const db = getDb();
+      if (!question) {
+        return notFound(res, "Question not found");
+      }
 
-      const q = db.prepare(`SELECT Id FROM Questions WHERE Id=?`).get(qId);
-      if (!q) return notFound(res, "Question not found");
-
-      const result = QuestionModel.getReplies(qId, sort, order);
-      return ok(res, { questionId: qId, ...result });
+      const result = await QuestionModel.getReplies(id, sort, order);
+      return ok(res, { questionId: id, ...result });
     } catch (err) {
       return serverError(res, err);
     }
